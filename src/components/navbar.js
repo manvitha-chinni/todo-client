@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Navbar, Nav, Form, Button, FormControl } from "react-bootstrap";
-import { logoutUser } from "../utils/auth";
+import {logout} from "../services/authService"
 
 const NavBar = () => {
   return (
@@ -24,7 +24,7 @@ const NavBar = () => {
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
             <Button variant="outline-success">Search</Button>
           </Form>
-          <Button onClick={logoutUser}>Logout</Button>
+          <Button onClick={logout}>Logout</Button>
         </Navbar.Collapse>
       </Navbar>
     </>

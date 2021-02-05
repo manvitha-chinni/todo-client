@@ -1,10 +1,11 @@
 import './App.css';
 import Login from './components/login';
 import TodoMain from './components/todoMain';
+import {isUserLoggedIn} from "./services/authService"
 function App() {
   return (
     <>
-      {localStorage.getItem("userId")?<TodoMain/>:<Login/>}
+      {isUserLoggedIn()?<TodoMain/>:<Login/>}
     </>
     
   );
