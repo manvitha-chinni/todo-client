@@ -15,6 +15,7 @@ class Task extends Component {
                 </div>
                 <div>
                     <i className="fa fa-edit"></i>
+                    <i className="far fa-trash-alt"></i>
                     {/* <img src={edit26} style={{padding:"2%"}}  alt="edit"/>
                     <img src={delete26}    alt="delete"/> */}
                 </div> 
