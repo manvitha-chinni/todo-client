@@ -37,7 +37,13 @@
   }
 }
 
-.Background{
-  background-image: url(./images/bg.jpg);
-  background-size: cover;
+.flex-row{
+  display: flex;
+  padding-left: 5%;
+  padding-top: 5%;
+  
+}
+.flex-row > div{
+  padding-right: 5%;
+  
 }

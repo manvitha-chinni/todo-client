@@ -1,6 +1,6 @@
 import React from "react";
 import GoogleLogin from "react-google-login";
-import { login,getCurrentUser } from "../services/authService";
+import { login } from "../services/authService";
 
 const failure=()=>{}
 
