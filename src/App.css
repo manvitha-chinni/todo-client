@@ -39,11 +39,38 @@
 
 .flex-row{
   display: flex;
-  padding-left: 5%;
-  padding-top: 5%;
+  margin: 1% 8%;
+  padding-left: 1%;
+  /* border: #B8B8B8 solid 1px; */
+  width:40%;
+  justify-content : space-between;
+  height: 50%;
+  box-shadow: -5px 5px 5px  #B8B8B8 ;
+  /* background-color: #E1F5FE; */
   
 }
+
 .flex-row > div{
-  padding-right: 5%;
+  padding-right: 2%;
   
+}
+.edit-icon{
+  color:#9E9E9E;
+  padding: 40%;
+}
+.delete-icon{
+ color: #9E9E9E; 
+ padding: 40%;
+}
+.content{
+  flex-grow: 1;
+}
+.icons{
+  box-shadow: -5px 0px  5px #B8B8B8;
+}
+.edit{
+  visibility: hidden;
+}
+.flex-row:hover .edit{
+  visibility:visible;
 }

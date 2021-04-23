@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import edit26 from '../../images/edit26.png';
-import delete26 from '../../images/delete26.png';
+import ShowMoreText from 'react-show-more-text';
+
 class Task extends Component {
     render() { 
         const {task} = this.props;
@@ -9,15 +9,15 @@ class Task extends Component {
                 <div>
                    <input type="checkbox" id={task.title} />
                 </div>
-                <div style={{width:"50%"}}>
+                <div className="content">
                     <label for={task.title} ><b>{task.title}</b></label>
-                    <p>{task.discription}</p>
+                    <ShowMoreText lines={1}><p>{task.discription}</p></ShowMoreText>
+                    
                 </div>
-                <div>
-                    <i className="fa fa-edit"></i>
-                    <i className="far fa-trash-alt"></i>
-                    {/* <img src={edit26} style={{padding:"2%"}}  alt="edit"/>
-                    <img src={delete26}    alt="delete"/> */}
+                <div className="edit">
+                    <i className="fas fa-pen fa-lg edit-icon icons"  ></i>
+                    <br></br>
+                    <i className="fas fa-minus-square fa-lg delete-icon icons"></i>
                 </div> 
            </div>
         );

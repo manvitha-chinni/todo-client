@@ -2,7 +2,7 @@ import React from "react";
 import GoogleLogin from "react-google-login";
 import { login } from "../services/authService";
 
-const failure=()=>{}
+const failure=()=>{console.log("failed to login");}
 
 const Login = () => {
   return (
