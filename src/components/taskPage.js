@@ -38,15 +38,25 @@ class TaskPage extends Component {
     ]
     state = { tasks:this.tasks }
     render() { 
-        // return ( <div>{this.state.tasks.map((val,index)=>{
-
-        //     return <h6 key={index}> {val.title}</h6>;
-        // })}</div>) ;
-        return (
+        
+        return (<>
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Action
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                    {/* <div class="dropdown-divider"></div> */}
+                    {/* <a class="dropdown-item" href="#">Separated link</a> */}
+                </div>
+            </div>
             <TasksList
             tasks={this.state.tasks}
             >
             </TasksList>
+            </>
         )
     }
 }
