@@ -12,7 +12,7 @@ class TaskPage extends Component {
             date: "24-04-2021"
         },
         {
-            completed:true,
+            completed:false,
             title: "stack problems",
             discription: "complete all stack problems",
             notify: true,
@@ -20,7 +20,7 @@ class TaskPage extends Component {
             date: "24-04-2021"
         },
         {
-            completed:true,
+            completed:false,
             title: "heap problems",
             discription: "complete all queue problems.dfgwfgwyegfiwfgqwiehf d hdfhkgdskffs dfgdsakfgsd kafksadkjfg hsdafsadkyfgshdkftgjksdftgkyuasefg kjsadfg sadfkhgsdfkgsdhfagsadfhg sadfhg dfgshdfghsdgfuyrtghrstgkirtgbralk gsadfhga sdhfg kjasdfsdyf sdfhjskgfksadh gffg sdaf sasjfdas dfasfkasf ygsafkaf avfasdjfa fajkfjA FDSVKJASD GHFKDASFHASDF bhcgvdjfsd hvhksdfgsadfsad dfjhsdvfsadvhvdsafhjVFJfv",
             notify: true,
@@ -38,24 +38,30 @@ class TaskPage extends Component {
     ]
     state = { tasks:this.tasks }
     render() { 
+        let completedTasks = this.state.tasks.filter((task)=>task.completed);
+        let pendingTasks = this.state.tasks.filter((task)=> !task.completed); 
         
         return (<>
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Action
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                    {/* <div class="dropdown-divider"></div> */}
-                    {/* <a class="dropdown-item" href="#">Separated link</a> */}
+             <select class="form-control select-dropdown" id="exampleFormControlSelect1">
+                <option>today</option>
+                <option>tomorrow</option>
+                <option>yesterday</option>
+                <option>pick a date</option>
+            </select>
+            <div className="container">
+                <div className="row">
+                <div className="col-lg-6">
+                    <h5>Pending</h5>
+                    <TasksList
+                    tasks={pendingTasks}></TasksList>
+                </div>
+                <div className="col-lg-6">
+                    <h5>Completed</h5>
+                    <TasksList
+                    tasks={completedTasks}></TasksList>
+                </div>
                 </div>
             </div>
-            <TasksList
-            tasks={this.state.tasks}
-            >
-            </TasksList>
             </>
         )
     }

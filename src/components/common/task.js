@@ -7,7 +7,7 @@ class Task extends Component {
         return ( 
            <div className="flex-row">
                 <div>
-                   <input type="checkbox" id={task.title} />
+                   <input type="checkbox" id={task.title} checked={task.completed}/>
                 </div>
                 <div className="content">
                     <label for={task.title} ><b>{task.title}</b></label>
