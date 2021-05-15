@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Task from './task';
 
-class TasksList extends Component {
-    render() { 
-        const {tasks} = this.props;
-        return ( <div>{tasks.map((val,index)=>{
-            return <div key={index}>
-                    <Task task={val}></Task>
-                    </div>
-        })}</div>);
-    }
+
+const TaskList = ({tasks,HandleChangeEvent}) => {
+    return (  <div>{tasks.map((val,index)=>{
+        return <div key={index}>
+                <Task 
+                task={val} 
+                HandleChangeEvent={HandleChangeEvent}/>
+                </div>
+    })}</div> );
 }
  
-export default TasksList;
+export default TaskList;
