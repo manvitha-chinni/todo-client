@@ -14,6 +14,7 @@ const TodoMain = () => {
                 <Route path="/dashboard" component={Dashboard}/>
                 <Route path="/analyze" component={Analyze}/>
                 <Route path="/search/:name" component={Login}/>
+                {/* <Route path="/tasks/new" component={NewTasks}/> */}
                 <Route path="/tasks" component={TaskPage}/>
                 <Route path="/dailyroutine" component={Dailyroutine} />
             </Switch>

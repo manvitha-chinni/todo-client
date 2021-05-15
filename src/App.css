@@ -9,7 +9,7 @@
   /* justify-content : space-between; */
   /* height: 50%; */
   box-shadow: -5px 5px 5px  #B8B8B8 ;
-  background-color: #E1F5FE;
+  background-color: #effaff;
   
 }
 
@@ -40,6 +40,23 @@
 .select-dropdown{
   width: auto;
 
+}
+.floating-add-btn {
+  display: flex;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: turquoise;
+  width: 56px;
+  height: 56px;
+  border-radius: 100%;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.floating-add-btn i {
+  font-size: 1.6rem;
+  color: white;
 }
 /* .select-dropdown option :hover{
   background-color: #9E9E9E;

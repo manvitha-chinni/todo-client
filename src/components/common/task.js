@@ -2,14 +2,15 @@ import React from 'react';
 import ShowMoreText from 'react-show-more-text';
 
 const Task = ({task,HandleChangeEvent}) => {
+    // console.log("task is",task);
     return (
         <div className="flex-row">
              <div>
-                <input type="checkbox" id={task.id} defaultChecked={task.completed} onChange={HandleChangeEvent}/>
+                <input type="checkbox" id={task.id} value={task.id} checked={task.completed} onChange={(e)=>HandleChangeEvent(e.target.checked,task.id)}/>
              </div>
              <div className="content">
-                 <label for={task.title} ><b>{task.title}</b></label>
-                 <ShowMoreText lines={1}><p>{task.discription}</p></ShowMoreText>
+                 <label htmlFor={task.title} ><b>{task.title}</b></label>
+                 <ShowMoreText lines={1}><p>{task.description}</p></ShowMoreText>
                  
              </div>
              <div className="edit">

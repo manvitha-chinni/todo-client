@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
-import TasksList from './common/tasksList'
+import TasksList from './common/tasksList';
+import Modal from 'react-modal';
+Modal.setAppElement("#root");
+
 
 const TaskPage = () => {
 
@@ -8,7 +11,7 @@ const TaskPage = () => {
             id:0,
             completed:false,
             title: "array problems",
-            discription: "complete all array problems",
+            description: "complete all array problems",
             notify: true,
             time:"10:25 pm",
             date: "24-04-2021"
@@ -17,7 +20,7 @@ const TaskPage = () => {
             id:1,
             completed:false,
             title: "stack problems",
-            discription: "complete all stack problems",
+            description: "complete all stack problems",
             notify: true,
             time:"10:25 pm",
             date: "24-04-2021"
@@ -26,7 +29,7 @@ const TaskPage = () => {
             id:2,
             completed:false,
             title: "heap problems",
-            discription: "complete all queue problems.dfgwfgwyegfiwfgqwiehf d hdfhkgdskffs dfgdsakfgsd kafksadkjfg hsdafsadkyfgshdkftgjksdftgkyuasefg kjsadfg sadfkhgsdfkgsdhfagsadfhg sadfhg dfgshdfghsdgfuyrtghrstgkirtgbralk gsadfhga sdhfg kjasdfsdyf sdfhjskgfksadh gffg sdaf sasjfdas dfasfkasf ygsafkaf avfasdjfa fajkfjA FDSVKJASD GHFKDASFHASDF bhcgvdjfsd hvhksdfgsadfsad dfjhsdvfsadvhvdsafhjVFJfv",
+            description: "complete all queue problems.dfgwfgwyegfiwfgqwiehf d hdfhkgdskffs dfgdsakfgsd kafksadkjfg hsdafsadkyfgshdkftgjksdftgkyuasefg kjsadfg sadfkhgsdfkgsdhfagsadfhg sadfhg dfgshdfghsdgfuyrtghrstgkirtgbralk gsadfhga sdhfg kjasdfsdyf sdfhjskgfksadh gffg sdaf sasjfdas dfasfkasf ygsafkaf avfasdjfa fajkfjA FDSVKJASD GHFKDASFHASDF bhcgvdjfsd hvhksdfgsadfsad dfjhsdvfsadvhvdsafhjVFJfv",
             notify: true,
             time:"10:25 am",
             date: "24-04-2022"
@@ -35,42 +38,50 @@ const TaskPage = () => {
             id:3,
             completed:false,
             title: "queue problems",
-            discription: "complete all queue problems.dfgwfgwyegfiwfgqwiehf dsasjfdas dfasfkasf ygsafkaf avfasdjfa fajkfjA FDSVKJASD GHFKDASFHASDF bhcgvdjfsd hvhksdfgsadfsad dfjhsdvfsadvhvdsafhjVFJfv",
+            description: "complete all queue problems.dfgwfgwyegfiwfgqwiehf dsasjfdas dfasfkasf ygsafkaf avfasdjfa fajkfjA FDSVKJASD GHFKDASFHASDF bhcgvdjfsd hvhksdfgsadfsad dfjhsdvfsadvhvdsafhjVFJfv",
             notify: true,
             time:"00:25 am",
             date: "24-12-2021"
         }
     ]
-    const [tasks,changeState] = useState(obj);
+    const [tasks,updateTasks] = useState(obj);
 
-    const filterCompletedTasks = () => tasks.filter((task)=>task.completed);
-    const filterPendingTasks = () => tasks.filter((task)=> !task.completed);
+    const filterCompletedTasks = (newTasks) =>{ 
+        return newTasks.filter(task=> task.completed);
+    };
+    const filterPendingTasks = (newTasks) => {
+        return newTasks.filter(task=> !task.completed);
+    };
 
-    const [completedTasks,changeStateCompletedTasks] = useState(filterCompletedTasks());
-    const [pendingTasks,changePendingTasks] = useState(filterPendingTasks());
+    const [completedTasks,updateCompletedTasks] = useState(filterCompletedTasks(tasks));
+    const [pendingTasks,updatePendingTasks] = useState(filterPendingTasks(tasks));
+    const [isModalOpen,toggleModal] = useState(false);
     
-    const HandleChangeEvent = (event)=>{
-        tasks.map((task)=>{
-            if( task.id == event.target.id) task.completed=event.target.checked;
+    const HandleChangeEvent = (value,id)=>{
+        let newTasks = [...tasks]
+        newTasks = newTasks.map((task)=>{
+            if( task.id === id) task.completed=value;
+            return task;
         })        
-        changeState(tasks);
-        let a = filterCompletedTasks(tasks);
-        changeStateCompletedTasks(a);
-        let b = filterPendingTasks(tasks);
-        changePendingTasks(b);
-        console.log("tasks",tasks,"completed",completedTasks,"pending",pendingTasks);
+        updateTasks(newTasks);
+        let a = filterCompletedTasks(newTasks);
+        updateCompletedTasks(a);
+        let b = filterPendingTasks(newTasks);
+        updatePendingTasks(b);
+        // console.log("tasks",tasks,"completed",completedTasks,"pending",pendingTasks);
     }
     
 
     return (<>
-        <select class="form-control select-dropdown" id="exampleFormControlSelect1">
+        
+       <div className="container">
+       <select className="form-control select-dropdown" id="exampleFormControlSelect1">
            <option>today</option>
            <option>tomorrow</option>
            <option>yesterday</option>
            <option>pick a date</option>
        </select>
-       <div className="container">
-           <div className="row">
+           <div className="row mt-5">
            <div className="col-lg-6">
                <h5>Pending</h5>
                <TasksList
@@ -84,6 +95,17 @@ const TaskPage = () => {
                HandleChangeEvent={HandleChangeEvent}/>
            </div>
            </div>
+            <div className="floating-add-btn" onClick={()=>{toggleModal(!isModalOpen)}}> 
+                <i className="fas fa-4x fa-plus"> </i>
+            </div>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={()=>{toggleModal(!isModalOpen)}}
+                contentLabel="My dialog"
+            >
+                <div>My modal dialog.</div>
+                <div className="btn btn-warning" onClick={()=>{toggleModal(!isModalOpen)}}>Close modal</div>
+            </Modal>
        </div>
        </>  );
 }
