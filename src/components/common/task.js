@@ -1,12 +1,21 @@
 import React from 'react';
 import ShowMoreText from 'react-show-more-text';
+import { deleteTask } from '../../services/taskService';
 
-const Task = ({task,HandleChangeEvent}) => {
+const Task = ({task,HandleChangeEvent,onEditClick}) => {
     // console.log("task is",task);
+
+    const onDeleteClick = async(id)=>{
+        try{
+            await deleteTask(id);
+            window.location.href="tasks/";
+        }
+        catch(e){}
+    }
     return (
         <div className="flex-row shadow m-2">
              <div>
-                <input className="cursor-pointer" type="checkbox" id={task.id} value={task.id} checked={task.completed} onChange={(e)=>HandleChangeEvent(e.target.checked,task.id)}/>
+                <input className="cursor-pointer" type="checkbox" id={task.id}  checked={task.completed} onChange={(e)=>HandleChangeEvent(e.target.checked,task.id)}/>
              </div>
              <div className="task-content">
                  <label className="cursor-pointer" htmlFor={task.id} ><b>{task.title}</b></label>
@@ -14,9 +23,9 @@ const Task = ({task,HandleChangeEvent}) => {
                  
              </div>
              <div className="task-edit shadow">
-                 <i className="fas fa-pen fa-lg edit-icon"  ></i>
+                 <i className="fas fa-pen fa-lg edit-icon" onClick={()=>onEditClick(task)} ></i>
                  <br></br>
-                 <i className="fas fa-minus-square fa-lg delete-icon"></i>
+                 <i className="fas fa-minus-square fa-lg delete-icon" onClick={()=>onDeleteClick(task.id)}></i>
              </div> 
         </div>  );
 }
