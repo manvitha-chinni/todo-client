@@ -1,11 +1,28 @@
 import React, {useState} from 'react';
+import Rodal from 'rodal';
 import TasksList from './common/tasksList';
 import Modal from 'react-modal';
+import NewTask from './newTask';
 Modal.setAppElement("#root");
 
 
 const TaskPage = () => {
-
+    
+    const modalOptions={
+        overlay:{
+            position:"fixed",
+            top:0,
+            left:0,
+            width:"100%",
+            height:"100%",
+            background:"rgba(0,0,0,0.3)"
+        },
+        content:{
+            margin:"auto",
+            width:"60%",
+            height:"50%"
+        }
+    }
     const obj = [
         {
             id:0,
@@ -95,16 +112,20 @@ const TaskPage = () => {
                HandleChangeEvent={HandleChangeEvent}/>
            </div>
            </div>
-            <div className="floating-add-btn" onClick={()=>{toggleModal(!isModalOpen)}}> 
-                <i className="fas fa-4x fa-plus"> </i>
-            </div>
+           {
+               (!isModalOpen) &&  
+               <div className="floating-add-btn shadow" onClick={()=>{toggleModal(!isModalOpen)}}> 
+                    <i className="fas fa-4x fa-plus"> </i>
+               </div>
+           }
+           
             <Modal
+                style={modalOptions}
+                closeTimeoutMS={500}
                 isOpen={isModalOpen}
-                onRequestClose={()=>{toggleModal(!isModalOpen)}}
-                contentLabel="My dialog"
-            >
-                <div>My modal dialog.</div>
-                <div className="btn btn-warning" onClick={()=>{toggleModal(!isModalOpen)}}>Close modal</div>
+                contentLabel="createNewTask">
+                <div>Create New Task <i class="far fa-times-circle float-right fa-lg cursor-pointer mt-1" onClick={()=>{toggleModal(!isModalOpen)}}></i> </div>
+                <NewTask/>
             </Modal>
        </div>
        </>  );
