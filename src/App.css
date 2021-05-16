@@ -1,43 +1,75 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.flex-row {
   display: flex;
-  flex-direction: column;
+  margin: 1%;
+  padding-left: 1%;
+  /* border: #B8B8B8 solid 1px; */
+  /* width:40%; */
+  /* justify-content : space-between; */
+  /* height: 50%; */
+  box-shadow: -5px 5px 5px #b8b8b8;
+  background-color: #effaff;
+}
+
+.flex-row > div {
+  padding-right: 2%;
+}
+.edit-icon {
+  color: #9e9e9e;
+  padding: 40%;
+}
+.delete-icon {
+  color: #9e9e9e;
+  padding: 40%;
+}
+.task-content {
+  flex-grow: 1;
+}
+.task-edit {
+  max-height: 66px;
+  visibility: hidden;
+}
+.flex-row:hover .task-edit {
+  visibility: visible;
+}
+.select-dropdown {
+  width: auto;
+}
+.floating-add-btn {
+  cursor: pointer;
+  display: flex;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: turquoise;
+  width: 56px;
+  height: 56px;
+  border-radius: 100%;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  z-index: 1000;
+}
+.floating-add-btn i {
+  font-size: 1.6rem;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+/* .select-dropdown option :hover{
+  background-color: #9E9E9E;
+} */
+.ReactModal__Content {
+  opacity: 0;
+  transform: translateY(1000px);
+  transition: all 500ms ease-in-out;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.ReactModal__Content--after-open {
+  opacity: 1;
+  transform: translateY(0px);
 }
 
-.Background{
-  background-image: url(./images/bg.jpg);
-  background-size: cover;
+.ReactModal__Content--before-close {
+  opacity: 0;
+  transform: translateY(1000px);
+}
+.cursor-pointer {
+  cursor: pointer;
 }

@@ -5,7 +5,7 @@ import Dailyroutine from './dailyroutine';
 import Dashboard from './dashboard';
 import Login from './login';
 import NavBar from './navbar';
-import Tasks from './tasks';
+import TaskPage from './taskPage';
 const TodoMain = () => {
     return ( 
         <>
@@ -14,7 +14,8 @@ const TodoMain = () => {
                 <Route path="/dashboard" component={Dashboard}/>
                 <Route path="/analyze" component={Analyze}/>
                 <Route path="/search/:name" component={Login}/>
-                <Route path="/tasks" component={Tasks}/>
+                {/* <Route path="/tasks/new" component={NewTasks}/> */}
+                <Route path="/tasks" component={TaskPage}/>
                 <Route path="/dailyroutine" component={Dailyroutine} />
             </Switch>
         </>
