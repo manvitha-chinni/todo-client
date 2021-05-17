@@ -2,7 +2,7 @@ import React from 'react';
 import ShowMoreText from 'react-show-more-text';
 import { deleteTask } from '../../services/taskService';
 
-const Task = ({task,HandleChangeEvent,onEditClick}) => {
+const Task = ({task,handleCheckedEvent,onEditClick}) => {
     // console.log("task is",task);
 
     const onDeleteClick = async(id)=>{
@@ -15,7 +15,7 @@ const Task = ({task,HandleChangeEvent,onEditClick}) => {
     return (
         <div className="flex-row shadow m-2">
              <div>
-                <input className="cursor-pointer" type="checkbox" id={task.id}  checked={task.completed} onChange={(e)=>HandleChangeEvent(e.target.checked,task.id)}/>
+                <input className="cursor-pointer" type="checkbox" id={task.id}  checked={task.completed} onChange={(e)=>handleCheckedEvent(e.target.checked,task)}/>
              </div>
              <div className="task-content">
                  <label className="cursor-pointer" htmlFor={task.id} ><b>{task.title}</b></label>

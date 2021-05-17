@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from 'react';
+import { changeDateFormat } from '../../services/helpers';
 import { createTask, updateTask } from '../../services/taskService';
 const EditTask = (props) => {
     const {header,task:existingTask,onComplete} =props;
@@ -7,7 +8,7 @@ const EditTask = (props) => {
     defaultData.title=existingTask.title || "";
     defaultData.description=existingTask.description || "";
     defaultData.notify=existingTask.notify || false;
-    defaultData.date=existingTask.date || new Date().toJSON().slice(0,10).replace(/-/g,'-');
+    defaultData.date=existingTask.date || changeDateFormat();
     defaultData.time=existingTask.time || "";
 
     const [task,updateEditTask] = useState(defaultData);

@@ -1,6 +1,7 @@
 import http from "./httpService";
 // import { apiUrl } from "../config.json";
 import axios from "axios";
+import {cloneJsonObject} from './helpers';
 
 // http.setJwt()
 const apiEndpoint = process.env.REACT_APP_BACKEND_ROOT_URL + "/tasks";
@@ -24,4 +25,9 @@ export function updateTask(task,id){
 }
 export function deleteTask(id){
     return http.delete(apiEndpoint+'/'+id,);
+}
+export function updateCheckedTask(task){
+    let newTask = cloneJsonObject(task);
+    delete newTask.id;
+    return http.put(apiEndpoint+'/'+task.id,newTask);
 }
