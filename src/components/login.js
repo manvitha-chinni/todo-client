@@ -18,9 +18,9 @@ const Login = () => {
 <path d="M118.04 61C117.613 61 117.251 60.872 116.952 60.616C116.696 60.3173 116.568 59.9547 116.568 59.528V17.736C116.568 17.2667 116.696 16.904 116.952 16.648C117.251 16.3493 117.613 16.2 118.04 16.2H132.568C139.011 16.2 143.661 17.6507 146.52 20.552C149.379 23.4107 150.872 27.7413 151 33.544C151.043 34.7813 151.064 36.4453 151.064 38.536C151.064 40.6267 151.043 42.312 151 43.592C150.872 47.6453 150.189 50.952 148.952 53.512C147.757 56.0293 145.859 57.9067 143.256 59.144C140.653 60.3813 137.197 61 132.888 61H118.04ZM132.568 55.56C135.512 55.56 137.837 55.1547 139.544 54.344C141.293 53.5333 142.552 52.2533 143.32 50.504C144.131 48.712 144.579 46.3227 144.664 43.336C144.749 40.776 144.792 39.176 144.792 38.536C144.792 37.8533 144.749 36.2747 144.664 33.8C144.579 29.576 143.576 26.504 141.656 24.584C139.736 22.6213 136.6 21.64 132.248 21.64H122.84V55.56H132.568Z" fill="#FEFFFF"/>
 <path fillRule="evenodd" clipRule="evenodd" d="M180.268 48.6286L199.781 28.8477L196.971 26L177.459 45.7809L169.809 38.0263L167 40.8739L177.459 51.4763L180.268 48.6287L180.268 48.6286Z" fill="#FEFFFF"/>
 </svg>
-      <p>this applicatiopn helps to store your to-do list, daily routine, and gives analysis of you activites weekly, monthly and yearly.
+      <p className="mt-4">this application helps to store your to-do list, daily routine, and gives analysis of you activites weekly, monthly and yearly.
   its also helps to remind you of specific time that you wanted to get remainded for tasks and daily routine.
-  set goals complete those and keep ginong :) </p>
+  set goals complete those and keep going :) </p>
       <br></br>
         <GoogleLogin
           clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}

@@ -4,7 +4,8 @@ import TasksList from './common/tasksList';
 import Modal from 'react-modal';
 import EditTask from './common/editTask';
 // import { event } from 'jquery';
-import { getTasks } from '../services/taskService';
+import { getTasks,updateCheckedTask } from '../services/taskService';
+import { cloneJsonObject, getCurrentDate, getTomorrowDate, getYesterdayDate } from '../services/helpers';
 Modal.setAppElement("#root");
 
 
@@ -26,23 +27,17 @@ const TaskPage = () => {
     }
     
     const [tasks,updateTasks] = useState([]);
-
-    // const filterCompletedTasks = (newTasks) =>{ 
-    //     return newTasks.filter(task=> task.completed);
-    // };
-    // const filterPendingTasks = (newTasks) => {
-    //     return newTasks.filter(task=> !task.completed);
-    // };
-
+    const [isDatePickerVisible,toggleDatePicker] = useState(false);
     const [completedTasks,updateCompletedTasks] = useState([]);
     const [pendingTasks,updatePendingTasks] = useState([]);
     const [isModalOpen,toggleModal] = useState(false);
     const [editHeader,updateEditHeader] = useState("");
     const [editTask,updateEditTask] = useState({});
+    const [date, updateDate] = useState(getCurrentDate());
 
     useEffect(async ()=>{
         try{
-            const {data} =await getTasks();
+            const {data} =await getTasks({date});
             updateTasks(data);
             console.log(data);
         }
@@ -50,7 +45,7 @@ const TaskPage = () => {
             console.log("problem while getting tasks! ");
         }
         
-    },[])
+    },[date])
     useEffect(()=>{
         const completedTasks = tasks.filter(task=>task.completed);
         const pendingTasks = tasks.filter(task=> !task.completed);
@@ -59,16 +54,32 @@ const TaskPage = () => {
     },[tasks])
 
     
-    const HandleChangeEvent = (value,id)=>{
-        let newTasks = [...tasks]
+    const handleCheckedEvent = async(value,checkedTask)=>{  
+        checkedTask.completed=value;    
+        const {data} = await updateCheckedTask(checkedTask);
+        // console.log(data);
+        let newTasks = cloneJsonObject(tasks);
         newTasks = newTasks.map((task)=>{
-            if( task.id === id) task.completed=value;
+            if( task.id === data.id) task=data;
             return task;
-        })        
+        })  
         updateTasks(newTasks);
-        // updateCompletedTasks(filterCompletedTasks(newTasks));
-        // updatePendingTasks(filterPendingTasks(newTasks));
-        // console.log("tasks",tasks,"completed",completedTasks,"pending",pendingTasks);
+    }
+    const handleDateChange = (event)=>{
+        const date = event.target.value;
+        if(date === 'custom-date')
+        {
+            toggleDatePicker(true);
+        }
+        else{
+            toggleDatePicker(false);
+            updateDate(date);
+        }
+    }
+    const handleDatePicked = (event)=>{
+        const date = event.target.value;
+        updateDate(date);
+        debugger;
     }
     const onEditClick=(task)=>{
         toggleModal(!isModalOpen);
@@ -85,26 +96,37 @@ const TaskPage = () => {
 
     return (<>
        <div className="container">
-       <select className="form-control select-dropdown" id="exampleFormControlSelect1">
-           <option>today</option>
-           <option>tomorrow</option>
-           <option>yesterday</option>
-           <option>pick a date</option>
-       </select>
-           <div className="row mt-5">
-           <div className="col-lg-6">
+       <div className="row ml-2">
+            <div>
+                <select className="form-control select-dropdown mt-2" id="exampleFormControlSelect1" onChange={handleDateChange}>
+                <option value={getCurrentDate()}>today</option>
+                <option value={getTomorrowDate()}>tomorrow</option>
+                <option value={getYesterdayDate()}>yesterday</option>
+                <option value="custom-date">pick a date</option>
+            </select>
+            </div>
+            {
+                isDatePickerVisible && <div className="col-12 col-md-6 form-group mt-2 p-0 mb-0"> 
+                            <input type="date" className="form-control" style={{width:"auto"}} value={date} onChange={handleDateChange} id="selectDate"/>
+                        </div>
+            }
+       </div>
+           <div className="row mt-4">
+           <div className="col-md-6">
                <h5>Pending</h5>
-               <TasksList
+              <div>
+                  {(pendingTasks.length<1)? <p>no pending tasks</p>: <TasksList
                tasks={pendingTasks}
-               HandleChangeEvent={HandleChangeEvent}
-               onEditClick={onEditClick}/>
+               handleCheckedEvent={handleCheckedEvent}
+               onEditClick={onEditClick}/>}
+              </div>
            </div>
-           <div className="col-lg-6">
+           <div className="col-md-6">
                <h5>Completed</h5>
-               <TasksList
+               <div>{(completedTasks.length<1)?<p>no completed tasks</p>:<TasksList
                tasks={completedTasks} 
-               HandleChangeEvent={HandleChangeEvent}
-               onEditClick={onEditClick}/>
+               handleCheckedEvent={handleCheckedEvent}
+               onEditClick={onEditClick}/>}</div>
            </div>
            </div>
            {
