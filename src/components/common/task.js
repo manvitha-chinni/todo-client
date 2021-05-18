@@ -18,7 +18,7 @@ const Task = ({task,handleCheckedEvent,onEditClick}) => {
                 <input className="cursor-pointer" type="checkbox" id={task.id}  checked={task.completed} onChange={(e)=>handleCheckedEvent(e.target.checked,task)}/>
              </div>
              <div className="task-content">
-                 <label className="cursor-pointer" htmlFor={task.id} ><b>{task.title}</b></label>
+                 <label className="cursor-pointer" htmlFor={task.id} ><b className="d-inline">{task.title}</b> <p  className="d-inline">{task.time}</p></label>
                  <ShowMoreText lines={1}><p>{task.description}</p></ShowMoreText>
                  
              </div>

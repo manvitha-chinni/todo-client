@@ -27,17 +27,17 @@ const TaskPage = () => {
     }
     
     const [tasks,updateTasks] = useState([]);
-
+    const [isDatePickerVisible,toggleDatePicker] = useState(false);
     const [completedTasks,updateCompletedTasks] = useState([]);
     const [pendingTasks,updatePendingTasks] = useState([]);
     const [isModalOpen,toggleModal] = useState(false);
     const [editHeader,updateEditHeader] = useState("");
     const [editTask,updateEditTask] = useState({});
-    const [dateObject, updateDateObject] = useState(getCurrentDate());
+    const [date, updateDate] = useState(getCurrentDate());
 
     useEffect(async ()=>{
         try{
-            const {data} =await getTasks();
+            const {data} =await getTasks({date});
             updateTasks(data);
             console.log(data);
         }
@@ -45,7 +45,7 @@ const TaskPage = () => {
             console.log("problem while getting tasks! ");
         }
         
-    },[])
+    },[date])
     useEffect(()=>{
         const completedTasks = tasks.filter(task=>task.completed);
         const pendingTasks = tasks.filter(task=> !task.completed);
@@ -66,7 +66,20 @@ const TaskPage = () => {
         updateTasks(newTasks);
     }
     const handleDateChange = (event)=>{
-        console.log(event.target.value)
+        const date = event.target.value;
+        if(date === 'custom-date')
+        {
+            toggleDatePicker(true);
+        }
+        else{
+            toggleDatePicker(false);
+            updateDate(date);
+        }
+    }
+    const handleDatePicked = (event)=>{
+        const date = event.target.value;
+        updateDate(date);
+        debugger;
     }
     const onEditClick=(task)=>{
         toggleModal(!isModalOpen);
@@ -83,14 +96,23 @@ const TaskPage = () => {
 
     return (<>
        <div className="container">
-       <select className="form-control select-dropdown" id="exampleFormControlSelect1" onChange={handleDateChange}>
-           <option value={getCurrentDate()}>today</option>
-           <option value={getTomorrowDate()}>tomorrow</option>
-           <option value={getYesterdayDate()}>yesterday</option>
-           <option value={{}}>pick a date</option>
-       </select>
-           <div className="row mt-5">
-           <div className="col-lg-6">
+       <div className="row ml-2">
+            <div>
+                <select className="form-control select-dropdown mt-2" id="exampleFormControlSelect1" onChange={handleDateChange}>
+                <option value={getCurrentDate()}>today</option>
+                <option value={getTomorrowDate()}>tomorrow</option>
+                <option value={getYesterdayDate()}>yesterday</option>
+                <option value="custom-date">pick a date</option>
+            </select>
+            </div>
+            {
+                isDatePickerVisible && <div className="col-12 col-md-6 form-group mt-2 p-0 mb-0"> 
+                            <input type="date" className="form-control" style={{width:"auto"}} value={date} onChange={handleDateChange} id="selectDate"/>
+                        </div>
+            }
+       </div>
+           <div className="row mt-4">
+           <div className="col-md-6">
                <h5>Pending</h5>
               <div>
                   {(pendingTasks.length<1)? <p>no pending tasks</p>: <TasksList
@@ -99,7 +121,7 @@ const TaskPage = () => {
                onEditClick={onEditClick}/>}
               </div>
            </div>
-           <div className="col-lg-6">
+           <div className="col-md-6">
                <h5>Completed</h5>
                <div>{(completedTasks.length<1)?<p>no completed tasks</p>:<TasksList
                tasks={completedTasks} 
