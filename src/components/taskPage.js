@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import EditTask from './common/editTask';
 // import { event } from 'jquery';
 import { getTasks,updateCheckedTask } from '../services/taskService';
-import { cloneJsonObject, getCurrentDate, getTomorrowDate, getYesterdayDate } from '../services/helpers';
+import { cloneJsonObject, getCurrentDate, getTomorrowDate, getYesterdayDate, sortArrayByTime } from '../services/helpers';
 Modal.setAppElement("#root");
 
 
@@ -38,7 +38,8 @@ const TaskPage = () => {
     useEffect(async ()=>{
         try{
             const {data} =await getTasks({date});
-            updateTasks(data);
+            const sortedTasks = sortArrayByTime(data)
+            updateTasks(sortedTasks);
             console.log(data);
         }
         catch(e){
@@ -63,7 +64,8 @@ const TaskPage = () => {
             if( task.id === data.id) task=data;
             return task;
         })  
-        updateTasks(newTasks);
+        const sortedTasks = sortArrayByTime(newTasks)
+        updateTasks(sortedTasks);
     }
     const handleDateChange = (event)=>{
         const date = event.target.value;
@@ -107,7 +109,7 @@ const TaskPage = () => {
             </div>
             {
                 isDatePickerVisible && <div className="col-12 col-md-6 form-group mt-2 p-0 mb-0"> 
-                            <input type="date" className="form-control" style={{width:"auto"}} value={date} onChange={handleDateChange} id="selectDate"/>
+                            <input type="date" className="form-control" style={{width:"auto"}} value={date} onChange={handleDatePicked} id="selectDate"/>
                         </div>
             }
        </div>
