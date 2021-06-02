@@ -1,11 +1,14 @@
 import React,{useState,useEffect} from 'react';
 import Modal from 'react-modal';
-import { cloneJsonObject } from '../services/helpers';
+import { cloneJsonObject, getCurrentDate, sortArrayByTime, updateList } from '../services/helpers';
+import { getAllRoutines, getTodayRoutines, updateRoutine } from '../services/routineService';
 import DailyroutinesList from './common/dailyroutinesList';
 import EditDailyroutinue from './common/editDailyroutinue';
 
 export const handleCheckedEventContext = React.createContext();
 export const onEditClickContext = React.createContext();
+export const routinesContext = React.createContext();
+export const updateRoutinesContext = React.createContext();
 
 const DailyroutinesPage = ()=>{
     const modalOptions={
@@ -45,7 +48,7 @@ const DailyroutinesPage = ()=>{
             notify:true,
             repeat:{
                 type:2,
-                value:["Saturday","Sunday"]
+                value:[6,0]
             },
             time:"23:20"
         },
@@ -69,80 +72,122 @@ const DailyroutinesPage = ()=>{
             notify:true,
             repeat:{
                 type:2,
-                value:["Monday","Sunday"]
+                value:[0,1]
             },
             time:"23:20"
         }
     ]
-    const [tasks,updateTasks] = useState(data);
-    const [completedTasks,updateCompletedTasks] = useState([]);
-    const [pendingTasks,updatePendingTasks] = useState([]);
+    const [routines,updateRoutines] = useState([]);
+    const [completedRoutines,updateCompletedRoutines] = useState([]);
+    const [pendingRoutines,updatePendingRoutines] = useState([]);
     const [isModalOpen,toggleModal] = useState(false);
     const [editHeader,updateEditHeader] = useState("");
-    const [editTask,updateEditTask] = useState({});
+    const [editRoutine,updateEditRoutine] = useState({});
+    const [routinesType,updateRoutinesType] = useState(true); //today
+
+    useEffect(async ()=>{
+        try{
+            const {data} =await getTodayRoutines({date:getCurrentDate()});
+            const sortedTasks = sortArrayByTime(data)
+            updateRoutines(sortedTasks);
+            console.log(data);
+        }
+        catch(e){
+            console.log("problem while getting routines! ");
+        }
+        
+    },[])
 
     useEffect(()=>{
-        const completedTasks = tasks.filter(task=>task.completed);
-        const pendingTasks = tasks.filter(task=> !task.completed);
-        updateCompletedTasks(completedTasks);
-        updatePendingTasks(pendingTasks);
-    },[tasks])
+        const completedRoutines = routines.filter(routine=>routine.completed);
+        const pendingRoutines = routines.filter(routine=> !routine.completed);
+        updateCompletedRoutines(completedRoutines);
+        updatePendingRoutines(pendingRoutines);
+    },[routines])
 
-    const addNewTask = ()=>{
+    const addNewRoutine = ()=>{
         toggleModal(!isModalOpen);  
         updateEditHeader("New Dailyroutine");
-        updateEditTask({})      
+        updateEditRoutine({})      
     }
-    const onEditClick=(task)=>{
+    const onEditClick=(routine)=>{
         toggleModal(!isModalOpen);
         updateEditHeader("Edit Dailyroutine");
-        // console.log("Edit task: ",task);
-        updateEditTask(task);
+        updateEditRoutine(routine);
 
     }
 
-    const handleCheckedEvent = (value,checkedTask)=>{  
-        // checkedTask.completed=value;    
-        // const {data} = await updateCheckedTask(checkedTask);
-        // console.log(data);
-        let newTasks = cloneJsonObject(tasks);
-        newTasks = newTasks.map((task)=>{
-            if( task.id === checkedTask.id) task.completed=value;
-            return task;
-        })  
-        // const sortedTasks = sortArrayByTime(newTasks)
-        updateTasks(newTasks);
+    const handleCheckedEvent = async (value,checkedRoutine)=>{  
+         
+        checkedRoutine.completed=value
+        const {data} = await updateRoutine(checkedRoutine.id,{updateType:1,date:getCurrentDate()},checkedRoutine);
+        updateRoutines(updateList(routines,data));
+    }
+    const handleRoutinueChange = async (event)=>{
+            let val = parseInt(event.target.value);
+            updateRoutinesType(val?true:false);
+            try {
+                if(val){
+                const {data} = await getTodayRoutines({date:getCurrentDate()});
+                updateRoutines(data);
+                }
+                else{
+                    const{data} = await getAllRoutines();
+                updateRoutines(data);
+                }
+            }
+            catch(e){}
     }
     
     return (<>
+        <routinesContext.Provider value={routines}>
+            <updateRoutinesContext.Provider value={updateRoutines}>
          <div className="container">
              <handleCheckedEventContext.Provider value={handleCheckedEvent}>
                  <onEditClickContext.Provider value={onEditClick}>
-           <div className="row mt-4">
+                <div className="row ml-2">
+                    <div>
+                        <select className="form-control select-dropdown mt-2" id="exampleFormControlSelect1" onChange={handleRoutinueChange} >
+                        <option value={1} >today</option>
+                        <option value={0} >all routines</option>
+                    </select>
+                    </div>
+                </div>
+
+           {!routinesType? <div className="roe mt-4">
+                    <div className="col-md-6">
+                    <h5>Routines</h5>
+                    <div>
+                        {(routines.length<1)? <p>no routines</p>: <DailyroutinesList
+                    routines={routines}
+                    routinesType={routinesType}
+                    />}
+                    </div>
+                    </div>      
+            </div>:<div className="row mt-4">
            <div className="col-md-6">
                <h5>Pending</h5>
                <div>
-                  {(pendingTasks.length<1)? <p>no pending tasks</p>: <DailyroutinesList
-               tasks={pendingTasks}
-            //    handleCheckedEvent={handleCheckedEvent}
-            //    onEditClick={onEditClick}
+                  {(pendingRoutines.length<1)? <p>no pending routines</p>: <DailyroutinesList
+               routines={pendingRoutines}
+               routinesType={routinesType}
                />}
               </div>
            </div>
            <div className="col-md-6">
                <h5>Completed</h5>
-               <div>{(completedTasks.length<1)?<p>no completed tasks</p>:<DailyroutinesList
-               tasks={completedTasks} 
-            //    handleCheckedEvent={handleCheckedEvent}
-            //    onEditClick={onEditClick}
+               <div>{(completedRoutines.length<1)?<p>no completed routines</p>:<DailyroutinesList
+               routines={completedRoutines} 
+               routinesType={routinesType}
                />}</div>
            </div>
-           </div>
+           </div>}  
+           
            </onEditClickContext.Provider>
            </handleCheckedEventContext.Provider>
            {
                (!isModalOpen) &&  
-               <div className="floating-add-btn shadow" onClick={addNewTask} > 
+               <div className="floating-add-btn shadow" onClick={addNewRoutine} > 
                     <i className="fas fa-4x fa-plus"> </i>
                </div>
            }
@@ -150,10 +195,13 @@ const DailyroutinesPage = ()=>{
                 style={modalOptions}
                 closeTimeoutMS={500}
                 isOpen={isModalOpen}
-                contentLabel="createNewTask">
-                <EditDailyroutinue onComplete={()=>toggleModal(!isModalOpen)} header={editHeader} task={editTask} />
+                contentLabel="createNewRoutine">
+                <EditDailyroutinue onComplete={()=>toggleModal(!isModalOpen)} header={editHeader} routine={editRoutine} routinesType={routinesType}/>
             </Modal>
        </div>
+       </updateRoutinesContext.Provider>
+       </routinesContext.Provider>
     </>);
+
 };
 export default DailyroutinesPage;

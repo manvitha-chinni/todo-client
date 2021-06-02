@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ShowMoreText from 'react-show-more-text';
+import { deleteItemFromList } from '../../services/helpers';
 import { deleteTask } from '../../services/taskService';
+import { tasksContext, updateTasksContext } from '../taskPage';
 
 const Task = ({task,handleCheckedEvent,onEditClick}) => {
-    // console.log("task is",task);
 
+    const tasks = useContext(tasksContext);
+    const updateTasks = useContext(updateTasksContext);
     const onDeleteClick = async(id)=>{
         try{
-            await deleteTask(id);
-            window.location.href="tasks/";
+            const {data} = await deleteTask(id);
+            updateTasks(deleteItemFromList(tasks,data));
         }
         catch(e){}
     }

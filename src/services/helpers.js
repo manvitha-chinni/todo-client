@@ -1,7 +1,7 @@
 
-export function cloneJsonObject(list){
-    return JSON.parse(JSON.stringify(list));
-} 
+
+
+//date helpers
 export function changeDateFormat(date){
     return date.toJSON().slice(0,10).replace(/-/g,'-');
 }
@@ -19,6 +19,10 @@ export function getCurrentDate(){
     let dateObj= new Date();
     return changeDateFormat(dateObj);
 }
+// object helpers
+export function cloneJsonObject(list){
+    return JSON.parse(JSON.stringify(list));
+} 
 export function isEmptyObj(obj){
     return (JSON.stringify(obj)===JSON.stringify({}));
 }
@@ -27,4 +31,29 @@ export function sortArrayByTime(arr){
      if(a.time<b.time) return -1;
      return 0;
  })
+}
+//state helpers
+export function updateList(tasks,updatedTask){
+    let newTasks = cloneJsonObject(tasks);
+        newTasks = newTasks.map((task)=>{
+            if( task.id === updatedTask.id) task=updatedTask;
+            return task;
+        }) 
+    return newTasks
+}
+export function addItemToList(tasks,newTask){
+    let newTasks = cloneJsonObject(tasks);
+    newTasks.push(newTask);
+    return newTasks;
+}
+export function deleteItemFromList(tasks,delTask){
+    let newTasks = cloneJsonObject(tasks);
+    let index ;
+    newTasks.map((task,ind)=>{
+        if( task.id === delTask.id) index= ind;
+        return task;
+    }) 
+    newTasks.splice(index,1);
+    return newTasks;
+
 }

@@ -1,6 +1,5 @@
 import http from "./httpService";
 // import { apiUrl } from "../config.json";
-import axios from "axios";
 import {cloneJsonObject} from './helpers';
 
 // http.setJwt()
@@ -24,7 +23,7 @@ export function updateTask(task,id){
     return http.put(apiEndpoint+'/'+id,task);
 }
 export function deleteTask(id){
-    return http.delete(apiEndpoint+'/'+id,);
+    return http.delete(apiEndpoint+'/'+id);
 }
 export function updateCheckedTask(task){
     let newTask = cloneJsonObject(task);

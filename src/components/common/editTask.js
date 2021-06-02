@@ -1,9 +1,12 @@
-import React,{useState,useEffect} from 'react';
-import { changeDateFormat, getCurrentDate } from '../../services/helpers';
-import { createTask, updateTask } from '../../services/taskService';
+import React,{useState,useEffect, useContext} from 'react';
+import { changeDateFormat, getCurrentDate, updateList } from '../../services/helpers';
+import { createTask, getTasks, updateTask } from '../../services/taskService';
+import { tasksContext, updateTasksContext } from '../taskPage';
 const EditTask = (props) => {
-    const {header,task:existingTask,onComplete} =props;
+    const {header,task:existingTask,onComplete,date} =props;
     const defaultData ={};
+    const tasks = useContext(tasksContext);
+    const updateTasks = useContext(updateTasksContext);
     
     defaultData.title=existingTask.title || "";
     defaultData.description=existingTask.description || "";
@@ -38,14 +41,16 @@ const EditTask = (props) => {
         onComplete();
     }
     const onSave = async ()=>{
+        let data;
         try{
             if(header==="New Task"){
                 await createTask(task);
             }else{
                 await updateTask(task,existingTask.id);
             }
-            console.log(JSON.stringify(task));
-            window.location.href = "tasks/"
+            const {data} =await getTasks({date});
+            updateTasks(data);
+            onComplete();
         }
         catch(e){console.log("something went worng while save task! ")}
     }

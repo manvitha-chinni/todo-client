@@ -5,8 +5,11 @@ import Modal from 'react-modal';
 import EditTask from './common/editTask';
 // import { event } from 'jquery';
 import { getTasks,updateCheckedTask } from '../services/taskService';
-import { cloneJsonObject, getCurrentDate, getTomorrowDate, getYesterdayDate, sortArrayByTime } from '../services/helpers';
+import { cloneJsonObject, getCurrentDate, getTomorrowDate, getYesterdayDate, sortArrayByTime, updateList } from '../services/helpers';
 Modal.setAppElement("#root");
+
+export const tasksContext = React.createContext()
+export const updateTasksContext = React.createContext();
 
 
 const TaskPage = () => {
@@ -57,14 +60,8 @@ const TaskPage = () => {
     
     const handleCheckedEvent = async(value,checkedTask)=>{  
         checkedTask.completed=value;    
-        const {data} = await updateCheckedTask(checkedTask);
-        // console.log(data);
-        let newTasks = cloneJsonObject(tasks);
-        newTasks = newTasks.map((task)=>{
-            if( task.id === data.id) task=data;
-            return task;
-        })  
-        const sortedTasks = sortArrayByTime(newTasks)
+        const {data} = await updateCheckedTask(checkedTask); 
+        const sortedTasks = sortArrayByTime(updateList(tasks,data));
         updateTasks(sortedTasks);
     }
     const handleDateChange = (event)=>{
@@ -97,6 +94,8 @@ const TaskPage = () => {
     }
 
     return (<>
+    <tasksContext.Provider value={tasks}>
+        <updateTasksContext.Provider value={updateTasks}>
        <div className="container">
        <div className="row ml-2">
             <div>
@@ -143,9 +142,11 @@ const TaskPage = () => {
                 closeTimeoutMS={500}
                 isOpen={isModalOpen}
                 contentLabel="createNewTask">
-                <EditTask onComplete={()=>toggleModal(!isModalOpen)} header={editHeader} task={editTask}/>
+                <EditTask onComplete={()=>toggleModal(!isModalOpen)} header={editHeader} task={editTask} date={date}/>
             </Modal>
        </div>
+       </updateTasksContext.Provider>
+    </tasksContext.Provider>
        </>  );
 }
  

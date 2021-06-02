@@ -23,9 +23,9 @@ function addQueryParams(url,params)
   let newUrl = url+"?";
   for(let key in params)
   {
-    newUrl+=key+"="+params[key];
+    newUrl+=key+"="+params[key]+"&";
   }
-  //add &
+  newUrl=newUrl.substr(0,newUrl.length-1);
   return newUrl;
 }
 
