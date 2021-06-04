@@ -1,10 +1,11 @@
 import React from 'react';
 import Dailyroutine from './dailyroutine';
-const DailyroutinesList = ({tasks}) => {
-    return (  <div>{tasks.map((val,index)=>{
+const DailyroutinesList = ({routines,routinesType}) => {
+    return (  <div>{routines.map((val,index)=>{
         return <div key={index}>
                 <Dailyroutine 
-                task={val} 
+                routine={val} 
+                routinesType={routinesType}
                 // handleCheckedEvent={handleCheckedEvent}
                 // onEditClick={onEditClick}
                 />

@@ -1,6 +1,5 @@
 import http from "./httpService";
 // import { apiUrl } from "../config.json";
-import axios from "axios";
 import {cloneJsonObject} from './helpers';
 
 // http.setJwt()
@@ -11,9 +10,12 @@ export function getTasks(params) {
     const url = http.addQueryParams(apiEndpoint,params)
   return http.get(url);
 } 
-export function getTaskById( id) {
-    return http.get(apiEndpoint+'/'+id);
-}   
+export function getAllTasks(){
+    return http.get(apiEndpoint+"/all");
+}
+// export function getTaskById( id) {
+//     return http.get(apiEndpoint+'/'+id);
+// }   
 export function editTaskById( id) {
     return http.get(apiEndpoint+'/edit/'+id);
 }   
@@ -24,7 +26,7 @@ export function updateTask(task,id){
     return http.put(apiEndpoint+'/'+id,task);
 }
 export function deleteTask(id){
-    return http.delete(apiEndpoint+'/'+id,);
+    return http.delete(apiEndpoint+'/'+id);
 }
 export function updateCheckedTask(task){
     let newTask = cloneJsonObject(task);
