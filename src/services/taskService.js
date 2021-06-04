@@ -10,9 +10,12 @@ export function getTasks(params) {
     const url = http.addQueryParams(apiEndpoint,params)
   return http.get(url);
 } 
-export function getTaskById( id) {
-    return http.get(apiEndpoint+'/'+id);
-}   
+export function getAllTasks(){
+    return http.get(apiEndpoint+"/all");
+}
+// export function getTaskById( id) {
+//     return http.get(apiEndpoint+'/'+id);
+// }   
 export function editTaskById( id) {
     return http.get(apiEndpoint+'/edit/'+id);
 }   

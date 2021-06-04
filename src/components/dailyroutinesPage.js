@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import Modal from 'react-modal';
-import { cloneJsonObject, getCurrentDate, sortArrayByTime, updateList } from '../services/helpers';
+import {  getCurrentDate, sortArrayByTime, updateList } from '../services/helpers';
 import { getAllRoutines, getTodayRoutines, updateRoutine } from '../services/routineService';
 import DailyroutinesList from './common/dailyroutinesList';
 import EditDailyroutinue from './common/editDailyroutinue';
@@ -26,57 +26,6 @@ const DailyroutinesPage = ()=>{
             height:"fit-content"
         }
     }
-
-    const data = [
-        {
-            id:1,
-            completed:true,
-            title:"hello",
-            description:"hello everyone ok ok",
-            notify:true,
-            repeat:{
-                type:1,
-                value:-1
-            },
-            time:"23:20"
-        },
-        {
-            id:2,
-            completed:true,
-            title:"new movie",
-            description:"watch a new movie, do it",
-            notify:true,
-            repeat:{
-                type:2,
-                value:[6,0]
-            },
-            time:"23:20"
-        },
-        {
-            id:3,
-            completed:false,
-            title:"learn abcd",
-            description:"A B C D E F G H I G K L M N O P Q R S T U V W X Y Z",
-            notify:true,
-            repeat:{
-                type:3,
-                value:[11,23]
-            },
-            time:"23:20"
-        },
-        {
-            id:4,
-            completed:false,
-            title:"do home work",
-            description:"complete maths problems.read 3rd lesson in subject scienceignore social, I can learn social in my future life.",
-            notify:true,
-            repeat:{
-                type:2,
-                value:[0,1]
-            },
-            time:"23:20"
-        }
-    ]
     const [routines,updateRoutines] = useState([]);
     const [completedRoutines,updateCompletedRoutines] = useState([]);
     const [pendingRoutines,updatePendingRoutines] = useState([]);
@@ -88,8 +37,7 @@ const DailyroutinesPage = ()=>{
     useEffect(async ()=>{
         try{
             const {data} =await getTodayRoutines({date:getCurrentDate()});
-            const sortedTasks = sortArrayByTime(data)
-            updateRoutines(sortedTasks);
+            updateRoutines(sortArrayByTime(data));
             console.log(data);
         }
         catch(e){
@@ -121,7 +69,8 @@ const DailyroutinesPage = ()=>{
          
         checkedRoutine.completed=value
         const {data} = await updateRoutine(checkedRoutine.id,{updateType:1,date:getCurrentDate()},checkedRoutine);
-        updateRoutines(updateList(routines,data));
+        const sortedList = sortArrayByTime(updateList(routines,data))
+        updateRoutines(sortedList);
     }
     const handleRoutinueChange = async (event)=>{
             let val = parseInt(event.target.value);
@@ -129,11 +78,11 @@ const DailyroutinesPage = ()=>{
             try {
                 if(val){
                 const {data} = await getTodayRoutines({date:getCurrentDate()});
-                updateRoutines(data);
+                updateRoutines(sortArrayByTime(data));
                 }
                 else{
                     const{data} = await getAllRoutines();
-                updateRoutines(data);
+                updateRoutines(sortArrayByTime(data));
                 }
             }
             catch(e){}
@@ -141,45 +90,59 @@ const DailyroutinesPage = ()=>{
     
     return (<>
         <routinesContext.Provider value={routines}>
-            <updateRoutinesContext.Provider value={updateRoutines}>
+        <updateRoutinesContext.Provider value={updateRoutines}>
          <div className="container">
-             <handleCheckedEventContext.Provider value={handleCheckedEvent}>
-                 <onEditClickContext.Provider value={onEditClick}>
-                <div className="row ml-2">
-                    <div>
-                        <select className="form-control select-dropdown mt-2" id="exampleFormControlSelect1" onChange={handleRoutinueChange} >
-                        <option value={1} >today</option>
-                        <option value={0} >all routines</option>
-                    </select>
-                    </div>
+            <handleCheckedEventContext.Provider value={handleCheckedEvent}>
+            <onEditClickContext.Provider value={onEditClick}>
+            <div className="row ml-2">
+                <div>
+                    <select className="form-control select-dropdown mt-2" id="exampleFormControlSelect1" onChange={handleRoutinueChange} >
+                    <option value={1} >today</option>
+                    <option value={0} >all routines</option>
+                </select>
                 </div>
+            </div>
 
-           {!routinesType? <div className="roe mt-4">
-                    <div className="col-md-6">
-                    <h5>Routines</h5>
-                    <div>
-                        {(routines.length<1)? <p>no routines</p>: <DailyroutinesList
-                    routines={routines}
-                    routinesType={routinesType}
-                    />}
-                    </div>
-                    </div>      
-            </div>:<div className="row mt-4">
-           <div className="col-md-6">
+           {
+           !routinesType? 
+            <div className="roe mt-4">
+            <div className="col-md-6">
+                <h5>Routines</h5>
+                <div>
+                    {
+                        (routines.length<1)? 
+                        <p>no routines</p>: 
+                        <DailyroutinesList
+                        routines={routines}
+                        routinesType={routinesType}/>
+                    }
+                </div>
+            </div>      
+            </div>:
+            <div className="row mt-4">
+            <div className="col-md-6">
                <h5>Pending</h5>
                <div>
-                  {(pendingRoutines.length<1)? <p>no pending routines</p>: <DailyroutinesList
-               routines={pendingRoutines}
-               routinesType={routinesType}
-               />}
+                    {
+                        (pendingRoutines.length<1)? 
+                        <p>no pending routines</p>: 
+                        <DailyroutinesList
+                        routines={pendingRoutines}
+                        routinesType={routinesType}/>
+                    }
               </div>
            </div>
            <div className="col-md-6">
                <h5>Completed</h5>
-               <div>{(completedRoutines.length<1)?<p>no completed routines</p>:<DailyroutinesList
-               routines={completedRoutines} 
-               routinesType={routinesType}
-               />}</div>
+               <div>
+                   {
+                        (completedRoutines.length<1)?
+                        <p>no completed routines</p>:
+                        <DailyroutinesList
+                        routines={completedRoutines} 
+                        routinesType={routinesType}/>
+                    }
+               </div>
            </div>
            </div>}  
            

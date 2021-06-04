@@ -1,17 +1,16 @@
-import React,{useState,useEffect, useContext} from 'react';
-import { changeDateFormat, getCurrentDate, updateList } from '../../services/helpers';
-import { createTask, getTasks, updateTask } from '../../services/taskService';
-import { tasksContext, updateTasksContext } from '../taskPage';
+import React,{useState, useContext} from 'react';
+import { sortArrayByTime } from '../../services/helpers';
+import { createTask, getAllTasks, getTasks, updateTask } from '../../services/taskService';
+import { updateTasksContext } from '../taskPage';
 const EditTask = (props) => {
-    const {header,task:existingTask,onComplete,date} =props;
+    const {header,task:existingTask,onComplete,date,tasksType} =props;
     const defaultData ={};
-    const tasks = useContext(tasksContext);
     const updateTasks = useContext(updateTasksContext);
     
     defaultData.title=existingTask.title || "";
     defaultData.description=existingTask.description || "";
     defaultData.notify=existingTask.notify || false;
-    defaultData.date=existingTask.date || getCurrentDate();
+    defaultData.date=existingTask.date || date;
     defaultData.time=existingTask.time || "";
 
     const [task,updateEditTask] = useState(defaultData);
@@ -48,8 +47,8 @@ const EditTask = (props) => {
             }else{
                 await updateTask(task,existingTask.id);
             }
-            const {data} =await getTasks({date});
-            updateTasks(data);
+            const {data} = tasksType?await getAllTasks(): await getTasks({date});
+            updateTasks(sortArrayByTime(data));
             onComplete();
         }
         catch(e){console.log("something went worng while save task! ")}

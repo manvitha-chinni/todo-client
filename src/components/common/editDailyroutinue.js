@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { addItemToList, cloneJsonObject, getCurrentDate, updateList } from '../../services/helpers';
+import {getCurrentDate, sortArrayByTime } from '../../services/helpers';
 import {Multiselect} from 'multiselect-react-dropdown';
 import { createRoutine, getAllRoutines, getTodayRoutines, updateRoutine } from '../../services/routineService';
 import { routinesContext, updateRoutinesContext } from '../dailyroutinesPage';
@@ -98,7 +98,7 @@ const EditDailyroutinue = (props) => {
                 await updateRoutine(existingRoutine.id,{updateType:2,date:getCurrentDate()},routine);
             }
             const {data} = routinesType?await getTodayRoutines({date:getCurrentDate()}):await getAllRoutines();
-            updateRoutines(data);
+            updateRoutines(sortArrayByTime(data));
             onComplete(); 
         }
         catch(e){console.log("something went worng while save task! ")}

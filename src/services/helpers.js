@@ -23,15 +23,19 @@ export function getCurrentDate(){
 export function cloneJsonObject(list){
     return JSON.parse(JSON.stringify(list));
 } 
-export function isEmptyObj(obj){
-    return (JSON.stringify(obj)===JSON.stringify({}));
-}
 export function sortArrayByTime(arr){
- return arr.sort((a,b)=>{
+ let newArr =  arr.sort((a,b)=>{
      if(a.time<b.time) return -1;
      return 0;
  })
+ return (sortArrayByCompleted(newArr))
 }
+export function sortArrayByCompleted(arr){
+    return arr.sort((a,b)=>{
+        if(a.completed<b.completed) return -1;
+        return 0;
+    })
+   }
 //state helpers
 export function updateList(tasks,updatedTask){
     let newTasks = cloneJsonObject(tasks);
@@ -40,11 +44,6 @@ export function updateList(tasks,updatedTask){
             return task;
         }) 
     return newTasks
-}
-export function addItemToList(tasks,newTask){
-    let newTasks = cloneJsonObject(tasks);
-    newTasks.push(newTask);
-    return newTasks;
 }
 export function deleteItemFromList(tasks,delTask){
     let newTasks = cloneJsonObject(tasks);

@@ -3,9 +3,8 @@ import React, {useState,useEffect} from 'react';
 import TasksList from './common/tasksList';
 import Modal from 'react-modal';
 import EditTask from './common/editTask';
-// import { event } from 'jquery';
-import { getTasks,updateCheckedTask } from '../services/taskService';
-import { cloneJsonObject, getCurrentDate, getTomorrowDate, getYesterdayDate, sortArrayByTime, updateList } from '../services/helpers';
+import { getAllTasks, getTasks,updateCheckedTask } from '../services/taskService';
+import { getCurrentDate, getTomorrowDate, getYesterdayDate, sortArrayByCompleted, sortArrayByTime, updateList } from '../services/helpers';
 Modal.setAppElement("#root");
 
 export const tasksContext = React.createContext()
@@ -37,12 +36,12 @@ const TaskPage = () => {
     const [editHeader,updateEditHeader] = useState("");
     const [editTask,updateEditTask] = useState({});
     const [date, updateDate] = useState(getCurrentDate());
+    const [allTasks,toggleAllTasks] = useState(false); 
 
     useEffect(async ()=>{
         try{
             const {data} =await getTasks({date});
-            const sortedTasks = sortArrayByTime(data)
-            updateTasks(sortedTasks);
+            updateTasks(sortArrayByTime(data));
             console.log(data);
         }
         catch(e){
@@ -57,7 +56,12 @@ const TaskPage = () => {
         updatePendingTasks(pendingTasks);
     },[tasks])
 
-    
+    const renderAllTasks = async()=>{
+        try{
+            const {data} = await getAllTasks();
+            updateTasks(sortArrayByTime(data));
+        }catch(e){}
+    }
     const handleCheckedEvent = async(value,checkedTask)=>{  
         checkedTask.completed=value;    
         const {data} = await updateCheckedTask(checkedTask); 
@@ -66,9 +70,14 @@ const TaskPage = () => {
     }
     const handleDateChange = (event)=>{
         const date = event.target.value;
+        toggleAllTasks(false);
         if(date === 'custom-date')
         {
             toggleDatePicker(true);
+        }
+        else if(date ==='all'){
+            toggleAllTasks(true);
+            renderAllTasks();
         }
         else{
             toggleDatePicker(false);
@@ -83,7 +92,6 @@ const TaskPage = () => {
     const onEditClick=(task)=>{
         toggleModal(!isModalOpen);
         updateEditHeader("Edit Task");
-        // console.log("Edit task: ",task);
         updateEditTask(task);
 
     }
@@ -104,6 +112,7 @@ const TaskPage = () => {
                 <option value={getTomorrowDate()}>tomorrow</option>
                 <option value={getYesterdayDate()}>yesterday</option>
                 <option value="custom-date">pick a date</option>
+                <option value="all">all Tasks</option>
             </select>
             </div>
             {
@@ -112,38 +121,62 @@ const TaskPage = () => {
                         </div>
             }
        </div>
-           <div className="row mt-4">
-           <div className="col-md-6">
-               <h5>Pending</h5>
-              <div>
-                  {(pendingTasks.length<1)? <p>no pending tasks</p>: <TasksList
-               tasks={pendingTasks}
-               handleCheckedEvent={handleCheckedEvent}
-               onEditClick={onEditClick}/>}
-              </div>
-           </div>
-           <div className="col-md-6">
-               <h5>Completed</h5>
-               <div>{(completedTasks.length<1)?<p>no completed tasks</p>:<TasksList
-               tasks={completedTasks} 
-               handleCheckedEvent={handleCheckedEvent}
-               onEditClick={onEditClick}/>}</div>
-           </div>
-           </div>
-           {
-               (!isModalOpen) &&  
-               <div className="floating-add-btn shadow" onClick={addNewTask}> 
-                    <i className="fas fa-4x fa-plus"> </i>
-               </div>
-           }
-           
-            <Modal
-                style={modalOptions}
-                closeTimeoutMS={500}
-                isOpen={isModalOpen}
-                contentLabel="createNewTask">
-                <EditTask onComplete={()=>toggleModal(!isModalOpen)} header={editHeader} task={editTask} date={date}/>
-            </Modal>
+       {
+        allTasks?
+        <div className="row mt-4">
+            <div className="col-md-6">
+                <h5>Tasks</h5>
+                <div>
+                    {(tasks.length<1)? <p>no tasks</p>: <TasksList
+                tasks={tasks}
+                handleCheckedEvent={handleCheckedEvent}
+                onEditClick={onEditClick}/>}
+                </div>
+            </div>
+        </div>
+        :
+        <div className="row mt-4">
+            <div className="col-md-6">
+                <h5>Pending</h5>
+                <div>
+                    {
+                        (pendingTasks.length<1) ?
+                        <p>no pending tasks</p> : 
+                        <TasksList
+                        tasks={pendingTasks}
+                        handleCheckedEvent={handleCheckedEvent}
+                        onEditClick={onEditClick}/>
+                    }
+                </div>
+            </div>
+            <div className="col-md-6">
+                <h5>Completed</h5>
+                <div>
+                    {
+                        (completedTasks.length<1) ?
+                        <p>no completed tasks</p> :
+                        <TasksList
+                        tasks={completedTasks} 
+                        handleCheckedEvent={handleCheckedEvent}
+                        onEditClick={onEditClick}/>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+        {
+            (!isModalOpen) &&  
+            <div className="floating-add-btn shadow" onClick={addNewTask}> 
+                <i className="fas fa-4x fa-plus"> </i>
+            </div>
+        }
+        <Modal
+            style={modalOptions}
+            closeTimeoutMS={500}
+            isOpen={isModalOpen}
+            contentLabel="createNewTask">
+            <EditTask onComplete={()=>toggleModal(!isModalOpen)} header={editHeader} task={editTask} date={date} tasksType={allTasks}/>
+        </Modal>
        </div>
        </updateTasksContext.Provider>
     </tasksContext.Provider>
