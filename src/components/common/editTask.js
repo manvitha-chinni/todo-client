@@ -1,5 +1,4 @@
 import React,{useState, useContext} from 'react';
-import { sortArrayByTime } from '../../services/helpers';
 import { createTask, getAllTasks, getTasks, updateTask } from '../../services/taskService';
 import { updateTasksContext } from '../taskPage';
 const EditTask = (props) => {
@@ -48,7 +47,7 @@ const EditTask = (props) => {
                 await updateTask(task,existingTask.id);
             }
             const {data} = tasksType?await getAllTasks(): await getTasks({date});
-            updateTasks(sortArrayByTime(data));
+            updateTasks(data);
             onComplete();
         }
         catch(e){console.log("something went worng while save task! ")}

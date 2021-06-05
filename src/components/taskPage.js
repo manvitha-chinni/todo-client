@@ -4,7 +4,7 @@ import TasksList from './common/tasksList';
 import Modal from 'react-modal';
 import EditTask from './common/editTask';
 import { getAllTasks, getTasks,updateCheckedTask } from '../services/taskService';
-import { getCurrentDate, getTomorrowDate, getYesterdayDate, sortArrayByCompleted, sortArrayByTime, updateList } from '../services/helpers';
+import { getCurrentDate, getTomorrowDate, getYesterdayDate, updateList } from '../services/helpers';
 Modal.setAppElement("#root");
 
 export const tasksContext = React.createContext()
@@ -41,7 +41,7 @@ const TaskPage = () => {
     useEffect(async ()=>{
         try{
             const {data} =await getTasks({date});
-            updateTasks(sortArrayByTime(data));
+            updateTasks(data);
             console.log(data);
         }
         catch(e){
@@ -59,13 +59,13 @@ const TaskPage = () => {
     const renderAllTasks = async()=>{
         try{
             const {data} = await getAllTasks();
-            updateTasks(sortArrayByTime(data));
+            updateTasks(data);
         }catch(e){}
     }
     const handleCheckedEvent = async(value,checkedTask)=>{  
         checkedTask.completed=value;    
         const {data} = await updateCheckedTask(checkedTask); 
-        const sortedTasks = sortArrayByTime(updateList(tasks,data));
+        const sortedTasks =updateList(tasks,data);
         updateTasks(sortedTasks);
     }
     const handleDateChange = (event)=>{
