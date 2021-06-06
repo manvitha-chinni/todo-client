@@ -1,7 +1,7 @@
 .flex-row {
   display: flex;
-  margin: 1%;
-  padding-left: 1%;
+  margin: 5px;
+  padding-left: 5px;
   /* border: #B8B8B8 solid 1px; */
   /* width:40%; */
   /* justify-content : space-between; */
@@ -11,14 +11,14 @@
 }
 
 .flex-row > div {
-  padding-right: 2%;
+  padding-right: 10px;
 }
 .edit-icon {
-  color: #05386B;
+  color: #05386b;
   padding: 40%;
 }
 .delete-icon {
-  color: #05386B;
+  color: #05386b;
   padding: 40%;
 }
 .task-content {
@@ -40,7 +40,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color:#05386B;
+  background-color: #05386b;
   width: 56px;
   height: 56px;
   border-radius: 100%;
@@ -72,4 +72,70 @@
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.task-skeleton {
+  padding: 5px 0px;
+  margin: 0px 6px;
+  display: flex;
+}
+.task-chkbox-skeleton {
+  width: 13px;
+  border-radius: 2px;
+  height: 13px;
+  background-color: black;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+.task-content-skeleton {
+  display: flex;
+  margin-left: 10px;
+  width: 100%;
+  flex-direction: column;
+}
+.task-title-skeleton {
+  margin-top: 2px;
+  height: 24px;
+  background-color: black;
+  width: 40%;
+  border-radius: 5px;
+}
+.task-desc-skeleton {
+  border-radius: 5px;
+  margin-top: 8px;
+  height: 21px;
+  background-color: black;
+  width: 95%;
+}
+.loading {
+  position: relative;
+  background-color: #c0c0c0;
+}
+.loading::after {
+  display: block;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100px);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(transparent),
+    color-stop(rgba(255, 255, 255, 0.5)),
+    to(transparent)
+  );
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  animation: loading 0.7s infinite;
+}
+@keyframes loading {
+  100% {
+    transform: translateX(100px);
+  }
 }
