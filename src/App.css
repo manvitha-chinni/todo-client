@@ -73,6 +73,7 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
 .task-skeleton {
   padding: 5px 0px;
   margin: 0px 6px;
@@ -100,6 +101,42 @@
   border-radius: 5px;
 }
 .task-desc-skeleton {
+  border-radius: 5px;
+  margin-top: 8px;
+  height: 21px;
+  background-color: black;
+  width: 95%;
+}
+
+
+
+.routine-skeleton {
+  padding: 5px 0px;
+  margin: 0px 6px;
+  display: flex;
+}
+.routine-chkbox-skeleton {
+  width: 13px;
+  border-radius: 2px;
+  height: 13px;
+  background-color: black;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+.routine-content-skeleton {
+  display: flex;
+  margin-left: 10px;
+  width: 100%;
+  flex-direction: column;
+}
+.routine-title-skeleton {
+  margin-top: 2px;
+  height: 24px;
+  background-color: black;
+  width: 40%;
+  border-radius: 5px;
+}
+.routine-desc-skeleton {
   border-radius: 5px;
   margin-top: 8px;
   height: 21px;

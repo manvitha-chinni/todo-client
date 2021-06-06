@@ -4,6 +4,8 @@ import {  getCurrentDate, updateList } from '../services/helpers';
 import { getAllRoutines, getTodayRoutines, updateRoutine } from '../services/routineService';
 import DailyroutinesList from './common/dailyroutinesList';
 import EditDailyroutinue from './common/editDailyroutinue';
+import RoutineSkeleton from './common/routineSkeleton';
+import TaskSkeleton from './common/taskSkeleton';
 
 export const handleCheckedEventContext = React.createContext();
 export const onEditClickContext = React.createContext();
@@ -11,6 +13,7 @@ export const routinesContext = React.createContext();
 export const updateRoutinesContext = React.createContext();
 
 const DailyroutinesPage = ()=>{
+    let loadingArray=[1,2];
     const modalOptions={
         overlay:{
             position:"fixed",
@@ -27,6 +30,7 @@ const DailyroutinesPage = ()=>{
         }
     }
     const [routines,updateRoutines] = useState([]);
+    const [dataLoaded,updateDataLoaded] = useState(false);
     const [completedRoutines,updateCompletedRoutines] = useState([]);
     const [pendingRoutines,updatePendingRoutines] = useState([]);
     const [isModalOpen,toggleModal] = useState(false);
@@ -36,7 +40,9 @@ const DailyroutinesPage = ()=>{
 
     useEffect(async ()=>{
         try{
+            updateDataLoaded(false);
             const {data} =await getTodayRoutines({date:getCurrentDate()});
+            updateDataLoaded(true);
             updateRoutines(data);
             console.log(data);
         }
@@ -75,13 +81,16 @@ const DailyroutinesPage = ()=>{
     const handleRoutinueChange = async (event)=>{
             let val = parseInt(event.target.value);
             updateRoutinesType(val?true:false);
+            updateDataLoaded(false);
             try {
                 if(val){
                 const {data} = await getTodayRoutines({date:getCurrentDate()});
+                updateDataLoaded(true);
                 updateRoutines(data);
                 }
                 else{
                     const{data} = await getAllRoutines();
+                    updateDataLoaded(true);
                 updateRoutines(data);
                 }
             }
@@ -105,24 +114,32 @@ const DailyroutinesPage = ()=>{
 
            {
            !routinesType? 
-            <div className="roe mt-4">
-            <div className="col-md-6">
-                <h5>Routines</h5>
+           <>{
+               (dataLoaded)?
+               <div className="roe mt-4">
+               <div className="col-md-6">
+                   <h5>Routines</h5>
+                   <div>
+                       {
+                           (routines.length<1)? 
+                           <p>no routines</p>: 
+                           <DailyroutinesList
+                           routines={routines}
+                           routinesType={routinesType}/>
+                       }
+                   </div>
+               </div>      
+               </div>:
                 <div>
-                    {
-                        (routines.length<1)? 
-                        <p>no routines</p>: 
-                        <DailyroutinesList
-                        routines={routines}
-                        routinesType={routinesType}/>
-                    }
+                {
+                    loadingArray.map(x=><TaskSkeleton key={x}/>)
+                }
                 </div>
-            </div>      
-            </div>:
+           }</>:
             <div className="row mt-4">
             <div className="col-md-6">
                <h5>Pending</h5>
-               <div>
+               {dataLoaded? <div>
                     {
                         (pendingRoutines.length<1)? 
                         <p>no pending routines</p>: 
@@ -130,11 +147,17 @@ const DailyroutinesPage = ()=>{
                         routines={pendingRoutines}
                         routinesType={routinesType}/>
                     }
-              </div>
+              </div>:
+               <div>
+               {
+                   loadingArray.map(x=><RoutineSkeleton key={x}/>)
+               }
+               </div>
+              }
            </div>
            <div className="col-md-6">
                <h5>Completed</h5>
-               <div>
+               {dataLoaded? <div>
                    {
                         (completedRoutines.length<1)?
                         <p>no completed routines</p>:
@@ -142,7 +165,13 @@ const DailyroutinesPage = ()=>{
                         routines={completedRoutines} 
                         routinesType={routinesType}/>
                     }
+               </div>:
+               <div>
+               {
+                   loadingArray.map(x=><RoutineSkeleton key={x}/>)
+               }
                </div>
+               }
            </div>
            </div>}  
            
