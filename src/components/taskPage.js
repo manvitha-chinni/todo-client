@@ -5,12 +5,16 @@ import Modal from 'react-modal';
 import EditTask from './common/editTask';
 import { getAllTasks, getTasks,updateCheckedTask } from '../services/taskService';
 import { getCurrentDate, getTomorrowDate, getYesterdayDate, updateList } from '../services/helpers';
+import TaskSkeleton from './common/taskSkeleton';
+
 Modal.setAppElement("#root");
 
 export const tasksContext = React.createContext()
 export const updateTasksContext = React.createContext();
 
 
+let loadingArray=[1,2,3];
+// let dataLoaded = false;
 const TaskPage = () => {
     const modalOptions={
         overlay:{
@@ -29,6 +33,7 @@ const TaskPage = () => {
     }
     
     const [tasks,updateTasks] = useState([]);
+    const [dataLoaded,updateDataLoaded] = useState(false);
     const [isDatePickerVisible,toggleDatePicker] = useState(false);
     const [completedTasks,updateCompletedTasks] = useState([]);
     const [pendingTasks,updatePendingTasks] = useState([]);
@@ -40,7 +45,9 @@ const TaskPage = () => {
 
     useEffect(async ()=>{
         try{
+            updateDataLoaded(false);
             const {data} =await getTasks({date});
+            updateDataLoaded(true);
             updateTasks(data);
             console.log(data);
         }
@@ -55,13 +62,6 @@ const TaskPage = () => {
         updateCompletedTasks(completedTasks);
         updatePendingTasks(pendingTasks);
     },[tasks])
-
-    const renderAllTasks = async()=>{
-        try{
-            const {data} = await getAllTasks();
-            updateTasks(data);
-        }catch(e){}
-    }
     const handleCheckedEvent = async(value,checkedTask)=>{  
         checkedTask.completed=value;    
         const {data} = await updateCheckedTask(checkedTask); 
@@ -77,7 +77,7 @@ const TaskPage = () => {
         }
         else if(date ==='all'){
             toggleAllTasks(true);
-            renderAllTasks();
+            updateDate(date);
         }
         else{
             toggleDatePicker(false);
@@ -107,7 +107,7 @@ const TaskPage = () => {
        <div className="container">
        <div className="row ml-2">
             <div>
-                <select className="form-control select-dropdown mt-2" id="exampleFormControlSelect1" onChange={handleDateChange}>
+                <select className="form-control select-dropdown mt-2 mr-2" id="exampleFormControlSelect1" onChange={handleDateChange}>
                 <option value={getCurrentDate()}>today</option>
                 <option value={getTomorrowDate()}>tomorrow</option>
                 <option value={getYesterdayDate()}>yesterday</option>
@@ -126,12 +126,21 @@ const TaskPage = () => {
         <div className="row mt-4">
             <div className="col-md-6">
                 <h5>Tasks</h5>
-                <div>
-                    {(tasks.length<1)? <p>no tasks</p>: <TasksList
-                tasks={tasks}
-                handleCheckedEvent={handleCheckedEvent}
-                onEditClick={onEditClick}/>}
-                </div>
+                {
+                     (dataLoaded) ?
+                        <div>
+                            {(tasks.length<1)? <p>no tasks</p>: <TasksList
+                            tasks={tasks}
+                            handleCheckedEvent={handleCheckedEvent}
+                            onEditClick={onEditClick}/>}
+                        </div>
+                            :
+                         <div>
+                         {
+                             loadingArray.map(x=><TaskSkeleton key={x}/>)
+                         }
+                         </div>
+                }
             </div>
         </div>
         :
@@ -140,12 +149,22 @@ const TaskPage = () => {
                 <h5>Pending</h5>
                 <div>
                     {
-                        (pendingTasks.length<1) ?
-                        <p>no pending tasks</p> : 
-                        <TasksList
-                        tasks={pendingTasks}
-                        handleCheckedEvent={handleCheckedEvent}
-                        onEditClick={onEditClick}/>
+                        (dataLoaded) ?
+                        <>
+                        {
+                            (pendingTasks.length<1) ?
+                            <p>no pending tasks</p> : 
+                            <TasksList
+                            tasks={pendingTasks}
+                            handleCheckedEvent={handleCheckedEvent}
+                            onEditClick={onEditClick}/>
+                        }
+                        </> :
+                            <div>
+                            {
+                                loadingArray.map(x=><TaskSkeleton key={x}/>)
+                            }
+                            </div>
                     }
                 </div>
             </div>
@@ -153,12 +172,32 @@ const TaskPage = () => {
                 <h5>Completed</h5>
                 <div>
                     {
-                        (completedTasks.length<1) ?
-                        <p>no completed tasks</p> :
-                        <TasksList
+                        (dataLoaded) ?
+                        <>
+                        {
+                           (completedTasks.length<1) ?
+                           <p>no completed tasks</p> :
+                           <TasksList
+                               tasks={completedTasks} 
                         tasks={completedTasks} 
-                        handleCheckedEvent={handleCheckedEvent}
-                        onEditClick={onEditClick}/>
+                               tasks={completedTasks} 
+                        tasks={completedTasks} 
+                               tasks={completedTasks} 
+                           tasks={completedTasks} 
+                               tasks={completedTasks} 
+                           tasks={completedTasks} 
+                               tasks={completedTasks} 
+                           tasks={completedTasks} 
+                               tasks={completedTasks} 
+                               handleCheckedEvent={handleCheckedEvent}
+                               onEditClick={onEditClick}/>
+                        }
+                        </> :
+                            <div>
+                            {
+                                loadingArray.map(x=><TaskSkeleton key={x}/>)
+                            }
+                            </div>
                     }
                 </div>
             </div>
