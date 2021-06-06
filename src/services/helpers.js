@@ -23,19 +23,6 @@ export function getCurrentDate(){
 export function cloneJsonObject(list){
     return JSON.parse(JSON.stringify(list));
 } 
-export function sortArrayByTime(arr){
- let newArr =  arr.sort((a,b)=>{
-     if(a.time<b.time) return -1;
-     return 0;
- })
- return (sortArrayByCompleted(newArr))
-}
-export function sortArrayByCompleted(arr){
-    return arr.sort((a,b)=>{
-        if(a.completed<b.completed) return -1;
-        return 0;
-    })
-   }
 //state helpers
 export function updateList(tasks,updatedTask){
     let newTasks = cloneJsonObject(tasks);

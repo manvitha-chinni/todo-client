@@ -14,11 +14,11 @@
   padding-right: 2%;
 }
 .edit-icon {
-  color: #9e9e9e;
+  color: #05386B;
   padding: 40%;
 }
 .delete-icon {
-  color: #9e9e9e;
+  color: #05386B;
   padding: 40%;
 }
 .task-content {
@@ -40,7 +40,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: turquoise;
+  background-color:#05386B;
   width: 56px;
   height: 56px;
   border-radius: 100%;

@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import Modal from 'react-modal';
-import {  getCurrentDate, sortArrayByTime, updateList } from '../services/helpers';
+import {  getCurrentDate, updateList } from '../services/helpers';
 import { getAllRoutines, getTodayRoutines, updateRoutine } from '../services/routineService';
 import DailyroutinesList from './common/dailyroutinesList';
 import EditDailyroutinue from './common/editDailyroutinue';
@@ -37,7 +37,7 @@ const DailyroutinesPage = ()=>{
     useEffect(async ()=>{
         try{
             const {data} =await getTodayRoutines({date:getCurrentDate()});
-            updateRoutines(sortArrayByTime(data));
+            updateRoutines(data);
             console.log(data);
         }
         catch(e){
@@ -69,7 +69,7 @@ const DailyroutinesPage = ()=>{
          
         checkedRoutine.completed=value
         const {data} = await updateRoutine(checkedRoutine.id,{updateType:1,date:getCurrentDate()},checkedRoutine);
-        const sortedList = sortArrayByTime(updateList(routines,data))
+        const sortedList = updateList(routines,data)
         updateRoutines(sortedList);
     }
     const handleRoutinueChange = async (event)=>{
@@ -78,11 +78,11 @@ const DailyroutinesPage = ()=>{
             try {
                 if(val){
                 const {data} = await getTodayRoutines({date:getCurrentDate()});
-                updateRoutines(sortArrayByTime(data));
+                updateRoutines(data);
                 }
                 else{
                     const{data} = await getAllRoutines();
-                updateRoutines(sortArrayByTime(data));
+                updateRoutines(data);
                 }
             }
             catch(e){}
