@@ -87,7 +87,6 @@ const TaskPage = () => {
     const handleDatePicked = (event)=>{
         const date = event.target.value;
         updateDate(date);
-        debugger;
     }
     const onEditClick=(task)=>{
         toggleModal(!isModalOpen);

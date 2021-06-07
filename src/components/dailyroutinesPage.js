@@ -115,26 +115,29 @@ const DailyroutinesPage = ()=>{
            {
            !routinesType? 
            <>{
-               (dataLoaded)?
                <div className="roe mt-4">
                <div className="col-md-6">
                    <h5>Routines</h5>
-                   <div>
+                   {
+                       (dataLoaded)?
+                       <div>
+                            {
+                                (routines.length<1)? 
+                                <p>no routines</p>: 
+                                <DailyroutinesList
+                                routines={routines}
+                                routinesType={routinesType}/>
+                            }
+                       </div>:
+                       <div>
                        {
-                           (routines.length<1)? 
-                           <p>no routines</p>: 
-                           <DailyroutinesList
-                           routines={routines}
-                           routinesType={routinesType}/>
+                           loadingArray.map(x=><RoutineSkeleton key={x}/>)
                        }
-                   </div>
+                       </div>
+
+                   }
                </div>      
-               </div>:
-                <div>
-                {
-                    loadingArray.map(x=><TaskSkeleton key={x}/>)
-                }
-                </div>
+               </div>
            }</>:
             <div className="row mt-4">
             <div className="col-md-6">
