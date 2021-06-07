@@ -27,10 +27,11 @@ const Dailyroutine = ({routine,routinesType}) => {
        <input className="cursor-pointer" type="checkbox" id={routine.id}  checked={routine.completed} onChange={(e)=>handleCheckedEvent(e.target.checked,routine)}/>
     </div>}
     <div className="task-content">
-        <label className="cursor-pointer" htmlFor={routine.id} ><b className="d-inline">{routine.title}</b> <p  className="d-inline">{routine.time}</p></label>
+        <label className="cursor-pointer" htmlFor={routine.id} ><b className="d-inline">{routine.title}</b> </label>
         <ShowMoreText lines={1}><p>{routine.description}</p></ShowMoreText>
         
     </div>
+    <div><p  className="d-inline">{routine.time}</p></div>
     <div className="task-edit shadow">
         <i className="fas fa-pen fa-lg edit-icon"
          onClick={()=>onEditClick(routine)} 

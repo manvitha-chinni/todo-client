@@ -13,7 +13,7 @@ export const tasksContext = React.createContext()
 export const updateTasksContext = React.createContext();
 
 
-let loadingArray=[1,2,3];
+let loadingArray=[1,2];
 // let dataLoaded = false;
 const TaskPage = () => {
     const modalOptions={
@@ -106,7 +106,7 @@ const TaskPage = () => {
        <div className="container">
        <div className="row ml-2">
             <div>
-                <select className="form-control select-dropdown mt-2 mr-2" id="exampleFormControlSelect1" onChange={handleDateChange}>
+                <select className="form-control select-dropdown mt-2 mr-2 custom-select" id="exampleFormControlSelect1" onChange={handleDateChange}>
                 <option value={getCurrentDate()}>today</option>
                 <option value={getTomorrowDate()}>tomorrow</option>
                 <option value={getYesterdayDate()}>yesterday</option>
@@ -213,7 +213,7 @@ const TaskPage = () => {
             closeTimeoutMS={500}
             isOpen={isModalOpen}
             contentLabel="createNewTask">
-            <EditTask onComplete={()=>toggleModal(!isModalOpen)} header={editHeader} task={editTask} date={date} tasksType={allTasks}/>
+            <EditTask onComplete={()=>toggleModal(!isModalOpen)} header={editHeader} task={editTask} date={date} />
         </Modal>
        </div>
        </updateTasksContext.Provider>

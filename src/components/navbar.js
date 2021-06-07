@@ -7,7 +7,7 @@ import {logout} from "../services/authService"
 const NavBar = () => {
   return (
     <>
-      <Navbar bg="light" expand="lg">
+      <Navbar bg="light" expand="lg" className=" custom-navbar">
         <Link to="/dashboard" className="navbar-brand">
         <svg width="130" height="40" viewBox="0 0 228 83" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="228" height="77" rx="38" fill="#5CDB95"/>
@@ -39,8 +39,7 @@ const NavBar = () => {
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
             <Button variant="outline-success">Search</Button>
           </Form> */}
-          <Button onClick={logout}>Logout</Button>
-        </Navbar.Collapse>
+<div onClick={logout} className="btn btn-outline-theme-blue ">Logout</div>        </Navbar.Collapse>
       </Navbar>
     </>
   );

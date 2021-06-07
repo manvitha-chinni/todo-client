@@ -1,3 +1,71 @@
+.custom-navbar{
+  background-color:#5CDB95   !important;
+}
+/* .navbar-light .navbar-nav .nav-link {
+  color:#b8b8b8;
+}
+
+.navbar-light .navbar-nav .nav-link.active {
+  color:aliceblue;
+} */
+
+.custom-select{
+  border-color: #05386b;
+  border-width: 2px;
+  color:#05386b;
+}
+.custom-select:focus{
+  border-color: #05386b;
+  border-width: 2px;
+  color:#05386b;
+}
+.custom-select option:hover{
+  background-color: #05386b !important;
+}
+.custom-checked::after {
+  background-color: #05386b !important;
+}
+.btn-custom-toggle{
+  color: #000;
+  background-color:#8ee4af;
+  
+}
+.btn-custom-toggle:hover{
+  color: white;
+}
+.btn-custom-toggle.active{
+  color: #000;
+  background-color: #379683;
+}
+.nav-link {
+  font-weight: 500;
+  color: #05386bb8 !important;
+}
+.nav-link:hover {
+  color: white !important;
+}
+.nav-link.active {
+  font-weight: 600;
+  color: #05386b !important;
+}
+.custom-navbar {
+  background-color: #5cdb95 !important;
+  padding: 3px 10px !important;
+}
+.logout-btn{
+  color: #05386b;
+  border-color:#05386b;
+}
+.btn-outline-theme-blue {
+  border-width: 2px;
+  border-color: #05386b;
+  color: #05386b;
+  font-weight: 500;
+}
+.btn-outline-theme-blue:hover {
+  background-color: #05386b;
+  color: white;
+}
 .flex-row {
   display: flex;
   margin: 5px;
@@ -7,7 +75,7 @@
   /* justify-content : space-between; */
   /* height: 50%; */
   box-shadow: -5px 5px 5px #b8b8b8;
-  background-color: #effaff;
+  background-color: #05386b;
 }
 
 .flex-row > div {
@@ -26,10 +94,10 @@
 }
 .task-edit {
   max-height: 66px;
-  visibility: hidden;
+  display: none;
 }
 .flex-row:hover .task-edit {
-  visibility: visible;
+  display:block;
 }
 .select-dropdown {
   width: auto;
@@ -176,3 +244,4 @@
     transform: translateX(100px);
   }
 }
+

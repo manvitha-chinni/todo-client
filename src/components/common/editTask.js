@@ -2,7 +2,7 @@ import React,{useState, useContext} from 'react';
 import { createTask, getAllTasks, getTasks, updateTask } from '../../services/taskService';
 import { updateTasksContext } from '../taskPage';
 const EditTask = (props) => {
-    const {header,task:existingTask,onComplete,date,tasksType} =props;
+    const {header,task:existingTask,onComplete,date} =props;
     const defaultData ={};
     const updateTasks = useContext(updateTasksContext);
     
@@ -46,7 +46,7 @@ const EditTask = (props) => {
             }else{
                 await updateTask(task,existingTask.id);
             }
-            const {data} = tasksType?await getAllTasks(): await getTasks({date});
+            const {data} = await getTasks({date});
             updateTasks(data);
             onComplete();
         }

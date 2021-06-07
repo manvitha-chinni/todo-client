@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react';
-import Chart from "react-google-charts";
 import {Bar,Line} from "react-chartjs-2"
+import { getRoutinesMonthlyAnalysis, getRoutinesWeeklyAnalysis, getTasksMonthlyAnalysis, getTasksWeeklyAnalysis } from '../services/analyseService';
+import { getMonthDates } from '../services/helpers';
 
 const WeeklyTasksData = {
     labels: ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri','Sat','Sun'
@@ -11,13 +12,13 @@ const WeeklyTasksData = {
 
       {
         label: 'Total Tasks',
-        data: [5, 10, 7, 6, 2, 8, 4,],
-        backgroundColor: 'rgb(54, 162, 235)',
+        data: [],
+        backgroundColor: 'rgb(5, 56, 107)',
       },
       {
         label: 'Completed Tasks',
-        data: [2, 5, 3, 5, 2, 7, 4,],
-        backgroundColor: 'rgb(75, 192, 192)',
+        data: [],
+        backgroundColor: 'rgb(92, 219, 149)',
       },
     ],
   };
@@ -31,45 +32,45 @@ const WeeklyTasksData = {
 
       {
         label: 'Total Routines',
-        data: [9, 12, 6, 8, 4, 10, 7,],
-        backgroundColor: 'rgb(54, 162, 235)',
+        data: [],
+        backgroundColor: 'rgb(5, 56, 107)',
       },
       {
         label: 'Completed Routines',
-        data: [7, 7, 5, 7, 1, 6, 7,],
-        backgroundColor: 'rgb(75, 192, 192)',
+        data: [],
+        backgroundColor: 'rgb(92, 219, 149)',
       },
     ],
   };
   const MonthlyTasksData = {
-    labels: ['1', '2', '3', '4', '5','6','7','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30'],
+    labels: getMonthDates(),
     datasets: [
 
       {
         label: 'Total Tasks',
-        data: [2, 10, 12, 5, 1, 8, 9, 4, 10, 8, 9, 3, 11, 3, 9, 4, 2, 3, 9, 5, 2, 3, 11, 5, 1, 4, 2, 3, 6, 5,],
-        backgroundColor: 'rgb(54, 162, 235)',
+        data: [],
+        backgroundColor: 'rgb(5, 56, 107)',
       },
       {
         label: 'Completed Tasks',
-        data: [2, 9,  10, 3, 1, 6, 4, 2, 9, 7, 6, 2, 5, 2, 7, 2, 1, 2, 3, 4, 2, 5, 6, 1, 4, 2, 3, 6, 4,5,],
-        backgroundColor: 'rgb(75, 192, 192)',
+        data: [],
+        backgroundColor: 'rgb(92, 219, 149)',
       },
     ],
   };
   const MonthlyRoutinesData = {
-    labels: ['1', '2', '3', '4', '5','6','7','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30'],
+    labels: getMonthDates(),
     datasets: [
 
       {
         label: 'Total Routines',
-        data: [2, 10, 12, 5, 1, 8, 9, 4, 10, 8, 9, 3, 11, 3, 9, 4, 2, 3, 9, 5, 2, 3, 11, 5, 1, 4, 2, 3, 6, 5,],
-        backgroundColor: 'rgb(54, 162, 235)',
+        data: [],
+        backgroundColor: 'rgb(5, 56, 107)',
       },
       {
         label: 'Completed Routines',
-        data: [2, 9,  10, 3, 1, 6, 4, 2, 9, 7, 6, 2, 5, 2, 7, 2, 1, 2, 3, 4, 2, 5, 6, 1, 4, 2, 3, 6, 4,5,],
-        backgroundColor: 'rgb(75, 192, 192)',
+        data: [],
+        backgroundColor: 'rgb(92, 219, 149)',
       },
     ],
   };
@@ -90,15 +91,67 @@ const Analyze = () => {
     const [chartType,updateChartType]=useState('bar');
 
 
-    useEffect(()=>{
+    useEffect(async()=>{
         let newData;
-        if(module=='routines'){
-            newData =(viewType==='weekly') ? WeeklyRoutinesData : MonthlyRoutinesData;
-        }
-        else{
-            newData =(viewType==='weekly') ? WeeklyTasksData : MonthlyTasksData;
-        }
-        updateData(newData);
+
+        try{
+          if(module=='routines'){
+            if(viewType==='weekly'){
+              const routineTrack = (await getRoutinesWeeklyAnalysis()).data;
+
+              routineTrack.map((item)=> {
+                const day =( new Date(item.date).getDay()||7)-1; 
+                WeeklyRoutinesData.datasets[0].data[day] = item.totalCount        
+              });
+              routineTrack.map((item)=>{
+                const day =( new Date(item.date).getDay()||7)-1; 
+                WeeklyRoutinesData.datasets[1].data[day] = item.completedCount        
+              });
+              newData = WeeklyRoutinesData;
+            }
+            else{
+              const routineTrack = (await getRoutinesMonthlyAnalysis()).data;
+              routineTrack.map((item)=> {
+                const date =( new Date(item.date).getDate())-1;
+                MonthlyRoutinesData.datasets[0].data[date] = item.totalCount;
+              });
+              routineTrack.map((item)=>{
+                const date =( new Date(item.date).getDate())-1;
+                MonthlyRoutinesData.datasets[1].data[date] =item.completedCount;
+              });
+              newData = MonthlyRoutinesData;
+            }
+          }
+          else{
+            if(viewType==='weekly'){
+              const taskTrack = (await getTasksWeeklyAnalysis()).data; 
+              taskTrack.map((item)=> {
+                const day =( new Date(item.date).getDay()||7)-1; 
+                WeeklyTasksData.datasets[0].data[day] = item.totalCount;
+              });
+              taskTrack.map((item)=>{
+                const day =( new Date(item.date).getDay()||7)-1; 
+                WeeklyTasksData.datasets[1].data[day] = item.completedCount;
+              });
+              newData = WeeklyTasksData;
+            }
+            else{
+              const taskTrack = (await getTasksMonthlyAnalysis()).data;
+              taskTrack.map((item)=> {
+                const date =( new Date(item.date).getDate())-1;
+                MonthlyTasksData.datasets[0].data[date] = item.totalCount;
+              });
+              taskTrack.map((item)=> {
+                const date =( new Date(item.date).getDate())-1;
+                MonthlyTasksData.datasets[1].data[date] = item.completedCount;
+              });
+              newData = MonthlyTasksData;
+            }
+          }
+      updateData(newData);
+    }
+    catch(e){}
+        
     },[module,viewType])
 
     const onModuleChange = (event) =>{
@@ -121,11 +174,11 @@ const Analyze = () => {
             <div className="d-flex justify-content-between">
             <div>
                 <div className="btn-group btn-group-toggle mt-3" data-toggle="buttons">
-                    <label htmlFor="routines" className="btn btn-primary shadow-none active" >
+                    <label htmlFor="routines" className="btn btn-custom-toggle shadow-none active" >
                         <input type="radio" name="options" id="routines" value="routines" checked={module==="routines"} onChange={onModuleChange}/>
                             Daily Routines
                     </label>
-                    <label htmlFor="tasks" className="btn btn-primary shadow-none" >
+                    <label htmlFor="tasks" className="btn btn-custom-toggle shadow-none" >
                         <input type="radio" name="options" id="tasks"  value="tasks" checked={module==="tasks"} onChange={onModuleChange} />
                             Tasks
                     </label>
@@ -133,11 +186,11 @@ const Analyze = () => {
             </div>
             <div>
                 <div className="btn-group btn-group-toggle mt-3" data-toggle="buttons">
-                    <label htmlFor="weekly" className="btn btn-primary shadow-none active" >
+                    <label htmlFor="weekly" className="btn btn-custom-toggle shadow-none active" >
                         <input type="radio" name="options" id="weekly" value="weekly" checked={viewType==="weekly"} onChange={onViewTypeChange}/>
-                        <i class="fas fa-calendar-week"></i>
+                        <i class="fas fa-calendar-week "></i>
                     </label>
-                    <label htmlFor="monthly" className="btn btn-primary shadow-none" >
+                    <label htmlFor="monthly" className="btn btn-custom-toggle shadow-none" >
                         <input type="radio" name="options" id="monthly"  value="monthly" checked={viewType==="monthly"} onChange={onViewTypeChange} />
                         <i class="fas fa-calendar-alt"></i>
                     </label>
@@ -145,15 +198,17 @@ const Analyze = () => {
             </div>
             </div>
             <div className="btn-group btn-group-toggle mt-3" data-toggle="buttons">
-                    <label htmlFor="bar" className="btn btn-primary shadow-none active" >
+                    <label htmlFor="bar" className="btn btn-custom-toggle shadow-none active" >
                         <input type="radio" name="options" id="bar" value="bar" checked={chartType==="bar"} onChange={onChartTypeChange}/>
                         <i class="fas fa-chart-bar"></i>
                     </label>
-                    <label htmlFor="line" className="btn btn-primary shadow-none" >
+                    <label htmlFor="line" className="btn btn-custom-toggle shadow-none" >
                         <input type="radio" name="options" id="line"  value="line" checked={chartType==="line"} onChange={onChartTypeChange} />
                         <i class="fas fa-chart-line"></i>
                     </label>
                 </div>
+                <div style={{textAlign:"center"}}><br/><h5>{viewType=="weekly"?"Weekly":"Monthly"} Analysis of {module=="routines"?"Dailyroutines":"Tasks"}</h5></div>
+
             <div>
                 <div style={{overflowX:"auto",height:"500px"}}>
                     {

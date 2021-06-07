@@ -23,6 +23,21 @@ export function getCurrentDate(){
 export function cloneJsonObject(list){
     return JSON.parse(JSON.stringify(list));
 } 
+export function getMonthDates(){
+    const months=[31,28,31,30,31,30,31,31,30,31,30,31];
+    const monthType = (new Date()).getMonth();
+    const year =  (new Date()).getFullYear();
+    if((year%400==0) || (year%4==0 && year%100!=0)){
+        months[1] = 29;
+    }
+
+    const arr = [];
+    for(let i=1;i<=months[monthType];i++){
+        arr.push(i);
+    }
+    return arr;
+
+}
 //state helpers
 export function updateList(tasks,updatedTask){
     let newTasks = cloneJsonObject(tasks);
