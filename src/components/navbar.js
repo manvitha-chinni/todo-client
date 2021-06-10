@@ -22,9 +22,6 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <NavLink className="nav-link" to="/dashboard">
-            Dashboard
-            </NavLink>
             <NavLink className="nav-link" to="/tasks">
             Tasks
             </NavLink>
