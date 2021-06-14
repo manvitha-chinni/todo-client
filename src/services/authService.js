@@ -9,7 +9,7 @@ http.setJwt(getJwt());
 async function addSubscription(subscription){
   console.log('going to subscribe');
   const url = rootUrl+"/subscribe";
-  await http.post(url,{subscription});
+  return http.post(url,{subscription});
 }
 
 export async function login(response) {
@@ -21,8 +21,6 @@ export async function login(response) {
         localStorage.setItem(tokenKey, jwt);
         http.setJwt(getJwt());
         await installServiceWorker(addSubscription);
-        console.log('installed');
-        debugger;
       } catch (e) {
         
         console.log("status:", e.response.status);
@@ -37,6 +35,22 @@ export async function login(response) {
 
 export function logout() {
   localStorage.removeItem(tokenKey);
+  const value = parseInt(localStorage.getItem('serviceWorkers'));
+  const url = rootUrl+"/subscribe/delete";
+  http.post(url,{value});
+  if ('serviceWorker' in navigator) {
+
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+
+    for(let registration of registrations) {
+            registration.unregister()
+
+    }}).catch(function(err) {
+
+        console.log('Service Worker registration failed: ', err);
+
+    });
+}
   window.location="/";
 }
 

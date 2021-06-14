@@ -76,7 +76,6 @@ async function installServiceWorker(addSubscriptionCallback){
             isSubscribed = !(subscription === null);
             if (isSubscribed) {
                 console.log('User is already subscribed');
-                debugger;
             }
             else{
                 const newSubscription = await  swRegistration.pushManager.subscribe({
@@ -85,10 +84,10 @@ async function installServiceWorker(addSubscriptionCallback){
                 });
                 console.log(newSubscription);
                 console.log('User is subscribed');
-                await addSubscriptionCallback(JSON.stringify(newSubscription));
+                const {data} =await addSubscriptionCallback(JSON.stringify(newSubscription));
+                localStorage.setItem('serviceWorkers',data.value)
 
                 isSubscribed = true;
-                debugger;
             }
         
         } catch (error) {
@@ -101,8 +100,6 @@ let helperFunctions ={installServiceWorker};
 
 // Send request to database for add new subscriber
 function saveSubscription(subscription) {
-    console.log('called network call')
-    debugger;
     let xmlHttp = new XMLHttpRequest();
     //put here API address
     xmlHttp.open("POST", "http://localhost:5000/subscribe");
@@ -117,8 +114,6 @@ function saveSubscription(subscription) {
     };
 
     xmlHttp.send(JSON.stringify(subscription));
-    console.log('completed network call');
-    debugger;
 }
 
 window.helperFunctions=helperFunctions;
