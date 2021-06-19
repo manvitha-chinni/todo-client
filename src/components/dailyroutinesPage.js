@@ -61,12 +61,12 @@ const DailyroutinesPage = ()=>{
 
     const addNewRoutine = ()=>{
         toggleModal(!isModalOpen);  
-        updateEditHeader("New Dailyroutine");
+        updateEditHeader("New Routine");
         updateEditRoutine({})      
     }
     const onEditClick=(routine)=>{
         toggleModal(!isModalOpen);
-        updateEditHeader("Edit Dailyroutine");
+        updateEditHeader("Edit Routine");
         updateEditRoutine(routine);
 
     }

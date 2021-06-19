@@ -18,14 +18,18 @@ const Task = ({task,handleCheckedEvent,onEditClick}) => {
     return (
         <div className="flex-row shadow m-2">
              <div>
-                <input className="cursor-pointer custom-checked" type="checkbox" id={task.id}  checked={task.completed} onChange={(e)=>handleCheckedEvent(e.target.checked,task)}/>
+                <input className="cursor-pointer custom-checked" style={{marginLeft:"5px"}} type="checkbox" id={task.id}  checked={task.completed} onChange={(e)=>handleCheckedEvent(e.target.checked,task)}/>
              </div>
-             <div className="task-content">
-                 <label className="cursor-pointer" htmlFor={task.id} ><b className="d-inline">{task.title}</b> </label>
-                 <ShowMoreText lines={1}><p>{task.description}</p></ShowMoreText>
+             <div className="task-content" >
+                <div className="title-time">
+                    <label className="cursor-pointer" htmlFor={task.id} ><b className="d-inline">{task.title}</b> </label>
+                    <p  className="d-inline">{task.time}</p>
+                </div>
+                <div  style={{marginBottom: "5px"}}>
+                <ShowMoreText lines={1}><p>{task.description}</p></ShowMoreText>
+                </div>
                  
              </div>
-             <div><p  className="d-inline">{task.time}</p></div>
              <div className="task-edit shadow">
                  <i className="fas fa-pen fa-lg edit-icon" onClick={()=>onEditClick(task)} ></i>
                  <br></br>

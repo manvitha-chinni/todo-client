@@ -24,14 +24,18 @@ const Dailyroutine = ({routine,routinesType}) => {
 
     return (  <div className="flex-row shadow m-2">
     {routinesType&&<div>
-       <input className="cursor-pointer" type="checkbox" id={routine.id}  checked={routine.completed} onChange={(e)=>handleCheckedEvent(e.target.checked,routine)}/>
+       <input className="cursor-pointer" style={{marginLeft:"5px"}} type="checkbox" id={routine.id}  checked={routine.completed} onChange={(e)=>handleCheckedEvent(e.target.checked,routine)}/>
     </div>}
-    <div className="task-content">
-        <label className="cursor-pointer" htmlFor={routine.id} ><b className="d-inline">{routine.title}</b> </label>
-        <ShowMoreText lines={1}><p>{routine.description}</p></ShowMoreText>
+    <div className="task-content" >
+        <div className="title-time">
+            <label className="cursor-pointer" htmlFor={routine.id} ><b className="d-inline">{routine.title}</b> </label>
+            <p  className="d-inline">{routine.time}</p>
+        </div>
+        <div style={{marginBottom: "5px"}}>
+        <ShowMoreText lines={1} ><p>{routine.description}</p></ShowMoreText>
+        </div>
         
     </div>
-    <div><p  className="d-inline">{routine.time}</p></div>
     <div className="task-edit shadow">
         <i className="fas fa-pen fa-lg edit-icon"
          onClick={()=>onEditClick(routine)} 

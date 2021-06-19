@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import {getCurrentDate } from '../../services/helpers';
+import {cloneJsonObject, getCurrentDate } from '../../services/helpers';
 import {Multiselect} from 'multiselect-react-dropdown';
 import { createRoutine, getAllRoutines, getTodayRoutines, updateRoutine } from '../../services/routineService';
 import { routinesContext, updateRoutinesContext } from '../dailyroutinesPage';
@@ -14,6 +14,12 @@ const EditDailyroutinue = (props) => {
     defaultData.notify=existingRoutine.notify || false;
     defaultData.repeat=existingRoutine.repeat || {type:1,value:[1]};
     defaultData.time=existingRoutine.time || "";
+
+    const errorData = {
+        title:"",
+        description:"",
+        time:"",
+    };
 
     const getNumbers=()=>{
         let arr=[];
@@ -33,6 +39,7 @@ const EditDailyroutinue = (props) => {
     const [routine,updateEditRoutine] = useState(defaultData);
     const [days,updateDays] = useState(daysArray);
     const [dates,updateDates] = useState(getNumbers());
+    const [errors,updateErrors] = useState(errorData);
     // const [isMultiselectVisible,toggleMultiselect] = useState(false);
 
    
@@ -65,7 +72,6 @@ const EditDailyroutinue = (props) => {
         let repeat = routine.repeat;
         repeat.value=selectedDays;
         updateEditRoutine({...routine,repeat});
-        console.log(routine);
     }
     const onSelectOrRemoveDates = (selectedList,item)=>{
         // console.log("selectedList",selectedList,"item",item);
@@ -89,10 +95,12 @@ const EditDailyroutinue = (props) => {
         onComplete();
     }
     const onSave = async ()=>{
-        let data;
+        let routineData = routine;
+        routineData.description = routineData.description.trim();
+        updateRoutine(routineData);
+        updateErrors(errorData);
         try{
-            
-            if(header==="New Dailyroutine"){
+            if(header==="New Routine"){
                 await createRoutine(routine);
             }else{
                 await updateRoutine(existingRoutine.id,{updateType:2,date:getCurrentDate()},routine);
@@ -101,14 +109,23 @@ const EditDailyroutinue = (props) => {
             updateRoutines(data);
             onComplete(); 
         }
-        catch(e){console.log("something went worng while save task! ")}
+        catch(e){
+            const err = e.response.data;
+            const key = err.path[0];
+            const value =err.message;
+            let error = cloneJsonObject(errorData);
+            error[key] = value;
+            updateErrors(error);
+            console.log("something went worng while save task! ")}
     }
+    console.log("errors: ",errors);
     return ( 
     <>
         <h5 className="text-primary">{header}</h5>
             <div className="form-group">
                 <label htmlFor="title">Title</label>
                 <input type="text" className="form-control" id="title" value={routine.title} onChange={onTitleChange} placeholder="Enter title"></input>
+                <p class="custom-error text-danger">{errors.title}</p>
             </div>
             <div className="row">
                 <div className="col-12 col-md-6 form-group"> 
@@ -146,6 +163,8 @@ const EditDailyroutinue = (props) => {
                 <div className="col-12 col-md-6 form-group">
                     <label htmlFor="selectTime">Time</label>
                     <input type="time" className="form-control" value={routine.time} onChange={onTimeChange} id="selectTime"/>
+                    <p class="custom-error text-danger">{errors.time}</p>
+
                 </div>
                 
             </div>
@@ -153,6 +172,8 @@ const EditDailyroutinue = (props) => {
             <div className="form-group">
                 <label htmlFor="description">Description</label>
                 <textarea className="form-control" id="description" value={routine.description} onChange={onDescriptionChange} rows="3"></textarea>
+                <p class="custom-error text-danger">{errors.description}</p>
+
             </div>
             <div className="form-check">
                 <input type="checkbox" className="form-check-input" id="notify" checked={routine.notify} onChange={onNotifyChange}></input>

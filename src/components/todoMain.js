@@ -15,8 +15,8 @@ const TodoMain = () => {
                 <Route path="/search/:name" component={Login}/>
                 {/* <Route path="/tasks/new" component={NewTasks}/> */}
                 <Route path="/tasks" component={TaskPage}/>
-                <Route path="/dailyroutine" component={DailyroutinesPage} />
-                <Redirect from="/" to="dailyroutine"/>
+                <Route path="/routines" component={DailyroutinesPage} />
+                <Redirect from="/" to="routines"/>
             </Switch>
         </>
         

@@ -1,4 +1,5 @@
 import React,{useState, useContext} from 'react';
+import { cloneJsonObject } from '../../services/helpers';
 import { createTask, getAllTasks, getTasks, updateTask } from '../../services/taskService';
 import { updateTasksContext } from '../taskPage';
 const EditTask = (props) => {
@@ -6,6 +7,13 @@ const EditTask = (props) => {
     const defaultData ={};
     const updateTasks = useContext(updateTasksContext);
     
+    const errorData = {
+        title:"",
+        description:"",
+        time:"",
+        date:""
+    };
+
     defaultData.title=existingTask.title || "";
     defaultData.description=existingTask.description || "";
     defaultData.notify=existingTask.notify || false;
@@ -13,6 +21,7 @@ const EditTask = (props) => {
     defaultData.time=existingTask.time || "";
 
     const [task,updateEditTask] = useState(defaultData);
+    const [errors,updateErrors] = useState(errorData);
 
     const onTitleChange = (event)=>{
         const title = event.target.value;
@@ -39,7 +48,10 @@ const EditTask = (props) => {
         onComplete();
     }
     const onSave = async ()=>{
-        let data;
+        let taskData = task;
+        taskData.description = taskData.description.trim();
+        updateTask(taskData);
+        updateErrors(errorData);
         try{
             if(header==="New Task"){
                 await createTask(task);
@@ -50,7 +62,15 @@ const EditTask = (props) => {
             updateTasks(data);
             onComplete();
         }
-        catch(e){console.log("something went worng while save task! ")}
+        catch(e){
+            const err = e.response.data;
+            const key = err.path[0];
+            const value =err.message;
+            let error = cloneJsonObject(errorData);
+            error[key] = value;
+            updateErrors(error);
+            console.log("something went worng while save task! ")
+        }
     }
     return ( 
     <>
@@ -58,21 +78,26 @@ const EditTask = (props) => {
             <div className="form-group">
                 <label htmlFor="title">Title</label>
                 <input type="text" className="form-control" id="title" value={task.title} onChange={onTitleChange} placeholder="Enter title"></input>
+                <p class="custom-error text-danger">{errors.title}</p>
             </div>
             <div className="row">
                 <div className="col-12 col-md-6 form-group"> 
                     <label htmlFor="selectDate">Date</label>
                     <input type="date" className="form-control" value={task.date} onChange={onDateChange} id="selectDate"/>
+                    <p class="custom-error text-danger">{errors.date}</p>
                 </div>
                 <div className="col-12 col-md-6 form-group">
                     <label htmlFor="selectTime">Time</label>
                     <input type="time" className="form-control" value={task.time} onChange={onTimeChange} id="selectTime"/>
+                    <p class="custom-error text-danger">{errors.time}</p>
+
                 </div>
             </div>
             
             <div className="form-group">
                 <label htmlFor="description">Description</label>
                 <textarea className="form-control" id="description" value={task.description} onChange={onDescriptionChange} rows="3"></textarea>
+                <p class="custom-error text-danger">{errors.description}</p>
             </div>
             <div className="form-check">
                 <input type="checkbox" className="form-check-input" id="notify" checked={task.notify} onChange={onNotifyChange}></input>

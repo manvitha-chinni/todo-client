@@ -176,7 +176,7 @@ const Analyze = () => {
                 <div className="btn-group btn-group-toggle mt-3" data-toggle="buttons">
                     <label htmlFor="routines" className="btn btn-custom-toggle shadow-none active" >
                         <input type="radio" name="options" id="routines" value="routines" checked={module==="routines"} onChange={onModuleChange}/>
-                            Daily Routines
+                            Routines
                     </label>
                     <label htmlFor="tasks" className="btn btn-custom-toggle shadow-none" >
                         <input type="radio" name="options" id="tasks"  value="tasks" checked={module==="tasks"} onChange={onModuleChange} />
@@ -207,7 +207,7 @@ const Analyze = () => {
                         <i class="fas fa-chart-line"></i>
                     </label>
                 </div>
-                <div style={{textAlign:"center"}}><br/><h5>{viewType=="weekly"?"Weekly":"Monthly"} Analysis of {module=="routines"?"Dailyroutines":"Tasks"}</h5></div>
+                <div style={{textAlign:"center"}}><br/><h5>{viewType=="weekly"?"Weekly":"Monthly"} Analysis of {module=="routines"?"Routines":"Tasks"}</h5></div>
 
             <div>
                 <div style={{overflowX:"auto",height:"500px"}}>

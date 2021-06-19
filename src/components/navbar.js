@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Navbar, Nav, Form, Button, FormControl } from "react-bootstrap";
-import {logout} from "../services/authService"
+import {getCurrentUser, logout} from "../services/authService"
 
 
 const NavBar = () => {
@@ -22,11 +22,11 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
+          <NavLink className="nav-link" to="/routines">
+            Routines
+            </NavLink>
             <NavLink className="nav-link" to="/tasks">
             Tasks
-            </NavLink>
-            <NavLink className="nav-link" to="/dailyroutine">
-            Dailyroutines
             </NavLink>
             <NavLink className="nav-link" to="/analyze">
               Analyze
@@ -36,6 +36,8 @@ const NavBar = () => {
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
             <Button variant="outline-success">Search</Button>
           </Form> */}
+          
+          <p style={{margin:"1%"}}>{getCurrentUser().name}</p>
 <div onClick={logout} className="btn btn-outline-theme-blue ">Logout</div>        </Navbar.Collapse>
       </Navbar>
     </>
